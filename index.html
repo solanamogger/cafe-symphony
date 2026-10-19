@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F3E8D5">
+<title>Cafe Symphony Aurangabad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display:ital,wght@0,600;1,500;1,600&family=Caveat:wght@500;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<meta name="description" content="Cafe Symphony, Chhatrapati Sambhajinagar (Aurangabad): freshly baked multigrain bread, khari, pav and custom eggless cakes. Order on WhatsApp.">
+<meta property="og:title" content="Cafe Symphony · Cakes & Pizzeria">
+<meta property="og:description" content="Freshly baked. Freshly served. Custom eggless cakes in Chhatrapati Sambhajinagar.">
+<meta property="og:image" content="img/z_c42.jpg">
+<link rel="icon" href="img/logo.png">
+<style>
+/* Layout concept: a bakery sketchbook. Warm paper with grain, the cafe's burnt orange and logo red,
+   giant condensed headlines with a red italic serif, handwritten margin notes and an ink sketch of
+   Bibi Ka Maqbara. Every food picture is a real one from Cafe Symphony. Deliberately one light look. */
+:root{
+  --paper:#F3E8D5; --paper-2:#FBF5EA; --card:#FFFDF8; --orange:#C2501D; --orange-2:#E07A3C; --red:#C6241B; --ink:#1A120E; --muted:#6A5343; --line:#E2D2BA; --note:#F7D54A; --tile:#2C4F7C;
+  --disp:"Anton",Impact,"Arial Narrow",sans-serif;
+  --serif:"Playfair Display",Georgia,serif;
+  --hand:"Caveat","Comic Sans MS",cursive;
+  --body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:auto}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.55;background:url(img/grain.png);transform:translateZ(0)}
+main{overflow-x:clip}
+img,video,canvas,svg{display:block;max-width:100%}
+h1,h2,h3{margin:0;font-family:var(--disp);font-weight:400;text-transform:uppercase;line-height:.9;letter-spacing:.005em}
+p{margin:0}
+a{color:inherit}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1320px;margin-inline:auto;padding-inline:clamp(16px,4vw,48px)}
+.serif-i{font-family:var(--serif);font-style:italic;font-weight:500;text-transform:none;letter-spacing:0}
+.hand{font-family:var(--hand);font-weight:700;color:var(--muted);line-height:1.05}
+.eyebrow{font-size:.74rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase}
+.no{font-family:var(--serif);font-style:italic;font-weight:500;color:var(--red);font-size:clamp(2.2rem,4vw,3.2rem);line-height:1}
+.btn{position:relative;display:inline-flex;align-items:center;gap:12px;min-height:52px;padding:13px 26px;border-radius:12px;border:1.5px solid var(--red);background:var(--red);color:#fff;font-weight:700;text-decoration:none;cursor:pointer;will-change:transform}
+.btn .ar{transition:transform .3s}.btn:hover .ar{transform:translateX(5px)}
+.btn.line{background:transparent;color:var(--ink);border-color:var(--ink)}
+.btn.light{background:transparent;color:#fff;border-color:rgba(255,255,255,.75)}
+.mask{display:block;overflow:hidden;padding-bottom:.04em}
+.mask>span{display:block;will-change:transform}
+
+/* ---------- loader ---------- */
+#loader{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:radial-gradient(120% 80% at 50% 60%,#FBF5EA 0%,#F3E8D5 60%,#EAD9BE 100%);overflow:hidden}
+#loader .in{position:relative;display:grid;justify-items:center;gap:14px;text-align:center;padding:20px}
+#loader .lg{width:min(230px,52vw);height:auto;margin-bottom:6px}
+.oven{position:relative;width:min(300px,72vw);perspective:900px;filter:drop-shadow(0 26px 30px rgba(70,35,10,.28))}
+.oven-top{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#2a1a12;border-radius:18px 18px 0 0;border-bottom:2px solid #120a06}
+.oven-top .knob{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#7a6a60,#2c2420);box-shadow:inset 0 0 0 2px #0e0805}
+.oven-top .knob i{display:block;width:2px;height:7px;margin:2px auto 0;background:#e9d5bb;border-radius:2px;transform-origin:50% 7px}
+.oven-top .lamp{margin-left:auto;width:10px;height:10px;border-radius:50%;background:#4a2a1a;transition:background .3s,box-shadow .3s}
+.oven-top .lamp.on{background:#ff7a2a;box-shadow:0 0 12px 3px rgba(255,122,42,.7)}
+.oven-top .lbl{font:700 .62rem/1 var(--body);letter-spacing:.22em;color:#cbb79d;text-transform:uppercase}
+.oven-body{background:#3a261c;border-radius:0 0 18px 18px;padding:14px 14px 18px}
+.door{position:relative;transform-origin:50% 100%;transform-style:preserve-3d;background:linear-gradient(#4a3226,#35231a);border-radius:12px;padding:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.door .handle{position:absolute;left:14%;right:14%;top:-7px;height:8px;border-radius:6px;background:linear-gradient(#d9c7ae,#8d7a64);box-shadow:0 3px 6px rgba(0,0,0,.4)}
+.win{position:relative;aspect-ratio:16/10;border-radius:8px;overflow:hidden;background:#140b07;box-shadow:inset 0 0 0 3px #0c0603}
+.win .glow{position:absolute;inset:0;background:radial-gradient(90% 90% at 50% 100%,#ffb35c 0%,#f2691e 40%,#5a1d08 85%);opacity:0}
+.win .coil{position:absolute;left:8%;right:8%;height:5px;border-radius:4px;background:#3b1a0e}
+.win .coil.t{top:9%}.win .coil.b{bottom:8%}
+.win svg{position:absolute;left:50%;bottom:12%;width:68%;transform:translateX(-50%);overflow:visible}
+.win .shine{position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.16) 0 18%,transparent 18% 32%,rgba(255,255,255,.07) 32% 38%,transparent 38%);pointer-events:none}
+.win .heat{position:absolute;bottom:40%;width:2px;height:30%;border-radius:2px;background:linear-gradient(transparent,rgba(255,230,190,.55),transparent);opacity:0;animation:heat 1.6s ease-in-out infinite}
+.win .h1{left:30%}.win .h2{left:52%;animation-delay:.5s}.win .h3{left:70%;animation-delay:1s}
+@keyframes heat{0%{transform:translateY(20%) scaleX(1);opacity:0}40%{opacity:var(--ho,0)}100%{transform:translateY(-60%) scaleX(3);opacity:0}}
+#loader .temp{display:flex;align-items:flex-start;font-family:var(--disp);font-size:clamp(3.6rem,10vw,6rem);line-height:.9;color:var(--ink);margin-top:6px}
+#loader .temp sup{font-size:.36em;margin:.12em 0 0 .06em;color:var(--orange)}
+#loader .hand{font-size:1.55rem;min-height:1.6em;color:var(--muted)}
+#loader .bar2{width:min(300px,72vw);height:3px;border-radius:3px;background:rgba(26,18,14,.12);overflow:hidden}
+#loader .bar2 i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--orange-2),var(--red));transform:scaleX(0);transform-origin:0 50%}
+#loader .c2{position:absolute;inset:0;background:var(--orange);clip-path:circle(0% at 50% 50%);z-index:2}
+@media (prefers-reduced-motion:reduce){.win .heat{animation:none}}
+
+/* ---------- cursor ---------- */
+#cur,#crumbs{position:fixed;left:0;top:0;pointer-events:none;z-index:300}
+#crumbs{width:100vw;height:100vh}
+#cur{width:0;height:0}
+#cur .ic{position:absolute;left:-26px;top:-26px;width:52px;height:52px;transition:transform .25s cubic-bezier(.2,.9,.3,1.4),opacity .2s;filter:drop-shadow(0 6px 8px rgba(60,30,10,.35))}
+#cur .ic svg{width:100%;height:100%;display:none}
+#cur[data-k="bread"] .i-bread,#cur[data-k="samosa"] .i-samosa,#cur[data-k="cake"] .i-cake{display:block}
+#cur .ring{position:absolute;left:-46px;top:-46px;width:92px;height:92px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-family:var(--hand);font-size:1.4rem;font-weight:700;transform:scale(0);transition:transform .3s cubic-bezier(.2,.9,.3,1.3)}
+#cur.hover .ring{transform:scale(1)}
+#cur.hover .ic{transform:translate(28px,-30px) scale(.7) rotate(-18deg)}
+#cur.down .ic{transform:scale(.8)}
+@media (pointer:fine){body.cursor-on,body.cursor-on a,body.cursor-on button,body.cursor-on .chip{cursor:none}}
+@media (pointer:coarse){#cur,#crumbs{display:none}}
+
+/* ---------- header ---------- */
+header.top{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top,0px);transition:transform .45s,background .3s}
+header.top.solid{background:rgba(246,237,222,.97);box-shadow:0 1px 0 var(--line)}
+header.top.hide{transform:translateY(-110%)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:84px}
+.bar .logo img{height:56px;width:auto}
+nav.main{display:flex;gap:30px;font-family:var(--serif);font-size:1.02rem}
+nav.main a{text-decoration:none;position:relative}
+nav.main a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1.5px;background:var(--red);transform:scaleX(0);transform-origin:right;transition:transform .35s}
+nav.main a:hover::after{transform:scaleX(1);transform-origin:left}
+.bar .btn{min-height:46px;padding:10px 20px}
+@media (max-width:900px){nav.main{display:none}.bar .logo img{height:42px}.bar .btn{padding:9px 14px;font-size:.9rem}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding-top:clamp(110px,14vh,150px);padding-bottom:40px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.62fr) minmax(0,.55fr);gap:clamp(18px,3vw,44px);align-items:center}
+.hero h1{font-size:clamp(3.4rem,7.2vw,7.4rem);margin-top:18px}
+.hero .sub{font-family:var(--serif);font-style:italic;color:var(--red);font-size:clamp(2rem,4.2vw,3.6rem);line-height:1.05;margin-top:10px}
+.hero .lede{max-width:46ch;color:var(--muted);font-size:1.06rem;margin-top:22px}
+.hero .cta{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:28px}
+.play{display:inline-flex;align-items:center;gap:12px;background:none;border:0;font-family:var(--serif);font-size:1.05rem;cursor:pointer;padding:0;text-decoration:none}
+.play i{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font-style:normal;font-size:.8rem}
+.phone-wrap{perspective:1200px;justify-self:center;width:min(100%,330px)}
+.phone{position:relative;aspect-ratio:9/19;border-radius:48px;background:#111;padding:11px;box-shadow:0 0 0 2px #2b2b2b inset,0 0 0 1px #000,-30px 40px 70px -20px rgba(70,35,10,.5);transform:rotate(7deg);transform-style:preserve-3d}
+.phone::before{content:"";position:absolute;right:-3px;top:22%;width:3px;height:70px;border-radius:2px;background:#2a2a2a}
+.phone .scr{position:relative;width:100%;height:100%;border-radius:38px;overflow:hidden;background:#000}
+.phone video,.phone canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.phone .notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:34%;height:24px;border-radius:14px;background:#000;z-index:3}
+.ig{position:absolute;inset:auto 0 0 0;z-index:2;padding:60px 14px 16px;background:linear-gradient(transparent,rgba(0,0,0,.65));color:#fff;font-size:.78rem;display:grid;gap:6px}
+.ig .u{display:flex;align-items:center;gap:8px;font-weight:700}
+.ig .u i{width:26px;height:26px;border-radius:50%;background:#fff url(img/logo.png) center/92% no-repeat;border:2px solid var(--orange)}
+.ig .side{position:absolute;right:12px;bottom:70px;display:grid;gap:16px;justify-items:center}
+.ig .side svg{width:22px;height:22px}
+.ig .cap{font-family:var(--serif);font-style:italic;font-size:1.25rem;position:absolute;top:58px;left:16px;right:16px;text-align:center;text-shadow:0 2px 12px rgba(0,0,0,.5);z-index:2}
+.side-col{position:relative;display:grid;gap:20px;align-self:stretch;align-content:space-between}
+.sketch{width:120%;max-width:none;margin-left:-10%;opacity:.95}
+.side-col .hand{font-size:1.75rem;transform:rotate(-6deg)}
+.side-col .hand.top{text-align:right;transform:rotate(4deg);color:var(--ink)}
+.feats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:clamp(36px,5vw,60px);border-top:1px solid var(--line);padding-top:24px}
+.feat{display:flex;gap:12px;align-items:center;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.feat svg{width:34px;height:34px;flex:none;stroke:var(--ink);fill:none;stroke-width:1.6}
+.award-chip{display:inline-flex;align-items:center;gap:12px;margin-top:30px;padding:10px 16px 10px 10px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.award-chip b{font-family:var(--disp);font-weight:400;font-size:1.1rem;letter-spacing:.03em;display:block;text-transform:uppercase}
+.award-chip span{font-size:.82rem;color:var(--muted)}
+.award-chip .z{width:44px;height:44px;border-radius:10px;background:var(--red);color:#fff;display:grid;place-items:center;font-family:var(--disp);font-size:1.3rem}
+@media (max-width:1100px){.hero-grid{grid-template-columns:minmax(0,1.1fr) minmax(0,.8fr)}.side-col{grid-column:1 / -1;grid-template-columns:1fr 1fr;align-items:center}.sketch{width:100%;margin:0}}
+@media (max-width:720px){.hero-grid{grid-template-columns:1fr}.phone-wrap{width:min(72%,300px)}.side-col{grid-template-columns:1fr}.feats{grid-template-columns:1fr 1fr}}
+
+/* ticker */
+.ticker{background:var(--ink);color:var(--paper);overflow:hidden;white-space:nowrap;border-block:1px solid var(--ink)}
+.ticker .row{display:inline-flex;gap:46px;padding-block:18px;font-family:var(--disp);font-size:clamp(1.6rem,3vw,2.4rem);text-transform:uppercase;will-change:transform}
+.ticker .row span{display:inline-flex;align-items:center;gap:46px}
+.ticker .row span::after{content:"";width:34px;height:34px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 40c0-14 11-24 24-24s24 10 24 24v6a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z' fill='%23E07A3C'/%3E%3Cpath d='M22 27l6 8M31 24l6 9M40 27l5 7' stroke='%23FBE2B8' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat}
+
+/* ---------- breads ---------- */
+#breads{position:relative;padding-top:clamp(80px,10vw,130px)}
+.giant{position:absolute;left:0;top:clamp(120px,14vw,190px);white-space:nowrap;font-family:var(--disp);font-size:clamp(9rem,24vw,22rem);line-height:.8;color:transparent;-webkit-text-stroke:2px var(--red);opacity:.55;pointer-events:none;z-index:0;will-change:transform}
+.bread-pin{position:relative;height:440vh}
+.bread-stage{position:sticky;top:0;height:100vh;height:100svh;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.05fr);gap:clamp(20px,3.5vw,56px);align-items:center;padding-top:70px;z-index:1}
+.bread-copy h2{font-size:clamp(3.4rem,7vw,6.6rem);margin-top:8px}
+.bread-copy .serif-i{display:block;font-size:clamp(1.5rem,2.4vw,2rem);line-height:1.15;margin-top:12px}
+.bread-copy p.c{color:var(--muted);max-width:40ch;margin-top:16px}
+.steps{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:12px}
+.steps li{display:flex;gap:14px;align-items:center;font-family:var(--serif);font-size:1.12rem;color:#a08b79;transition:color .3s}
+.steps li b{width:34px;height:34px;border-radius:50%;border:1.5px solid currentColor;display:grid;place-items:center;font-family:var(--body);font-size:.85rem;flex:none;transition:background .3s,color .3s,border-color .3s}
+.steps li.on{color:var(--ink)}
+.steps li.on b{background:var(--red);border-color:var(--red);color:#fff}
+.bread-stage .phone-wrap{width:min(26vw,300px);min-width:220px}
+.bread-stage .phone{transform:rotate(-3deg)}
+.pol-stack{position:relative;height:min(76vh,640px)}
+.pol{position:absolute;background:var(--card);padding:10px 10px 46px;border-radius:4px;box-shadow:0 18px 40px -16px rgba(60,30,10,.45);width:min(56%,250px);will-change:transform}
+.pol img{width:100%;aspect-ratio:1;object-fit:cover}
+.pol figcaption{position:absolute;left:12px;right:12px;bottom:8px;font-family:var(--hand);font-size:1.5rem;font-weight:700;line-height:1}
+.pol.p1{left:4%;top:2%;transform:rotate(-5deg)}
+.pol.p2{right:0;top:12%;transform:rotate(6deg)}
+.pol.p3{left:12%;top:48%;transform:rotate(3deg)}
+.pol.p4{right:6%;top:58%;transform:rotate(-7deg)}
+.margin-note{position:absolute;font-family:var(--hand);font-weight:700;font-size:1.7rem;color:var(--red);transform:rotate(-8deg);line-height:1}
+.philo{display:flex;gap:28px;flex-wrap:wrap;margin-top:26px;font-size:.84rem;font-weight:700;letter-spacing:.06em}
+.philo span{display:flex;gap:8px;align-items:center}
+.philo span::before{content:"✓";width:22px;height:22px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font-size:.7rem}
+@media (max-width:1000px){
+  .bread-pin{height:400vh}
+  .bread-stage{grid-template-columns:1fr;align-content:center;justify-items:center;text-align:center;gap:12px;padding-top:72px;padding-bottom:16px}
+  .bread-copy{display:grid;justify-items:center}
+  .bread-copy h2{font-size:clamp(2.4rem,8vw,3.6rem);margin-top:2px}
+  .bread-copy .no{font-size:1.6rem}
+  .bread-copy .c,.bread-copy .serif-i,.philo{display:none}
+  .steps{margin-top:10px;gap:6px;text-align:left}
+  .steps li{font-size:.98rem}
+  .steps li b{width:28px;height:28px}
+  .bread-stage .phone-wrap{width:auto;min-width:0;height:min(48vh,430px);aspect-ratio:9/19}
+  .bread-stage .phone{height:100%;padding:8px;border-radius:36px}
+  .bread-stage .phone .scr{border-radius:29px}
+  .pol-stack{display:none}
+  .giant{top:40px}
+}
+
+/* ---------- savouries ---------- */
+#savouries{position:relative;background:var(--orange);color:var(--paper-2);overflow:clip}
+#savouries::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 80% at 80% 0%,rgba(255,180,110,.25),transparent 60%),radial-gradient(90% 70% at 0% 100%,rgba(90,25,5,.35),transparent 60%)}
+.sav-pin{position:relative;height:300vh}
+.sav-stage{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;justify-content:center;gap:clamp(18px,3vh,36px);overflow:hidden;z-index:1}
+.sav-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:30px;align-items:end}
+.sav-head .no{color:#fff}
+.sav-head h2{font-size:clamp(3.4rem,7vw,6.4rem);color:#fff}
+.sav-head .serif-i{font-size:clamp(1.4rem,2.4vw,2rem);color:#FFE3C9;display:block;margin-top:8px}
+.sav-head .hand{color:#FFE3C9;font-size:2rem;transform:rotate(-6deg);text-align:right}
+.sav-track{display:flex;gap:clamp(20px,3vw,40px);padding-inline:clamp(16px,4vw,48px);width:max-content;will-change:transform;align-items:center}
+.spol{position:relative;flex:none;width:clamp(230px,24vw,320px);background:var(--card);color:var(--ink);padding:12px 12px 56px;border-radius:4px;box-shadow:0 26px 50px -18px rgba(40,10,0,.55)}
+.spol:nth-child(odd){transform:rotate(-3deg)}.spol:nth-child(even){transform:rotate(3deg) translateY(24px)}
+.spol img{width:100%;aspect-ratio:4/5;object-fit:cover}
+.spol figcaption{position:absolute;left:14px;right:14px;bottom:12px;font-family:var(--serif);font-style:italic;font-size:1.3rem}
+.sticky{position:absolute;top:-22px;right:-16px;width:118px;min-height:96px;padding:12px 10px;background:var(--note);color:var(--ink);font-family:var(--hand);font-weight:700;font-size:1.3rem;line-height:1;text-align:center;transform:rotate(7deg);box-shadow:0 8px 16px -6px rgba(0,0,0,.35);display:grid;place-items:center}
+.sticky::before{content:"";position:absolute;top:-9px;left:50%;width:48px;height:18px;transform:translateX(-50%) rotate(-3deg);background:rgba(255,255,255,.55)}
+.sticky.l{left:-18px;right:auto;transform:rotate(-8deg)}
+.quote-card{flex:none;width:clamp(240px,24vw,320px);font-family:var(--disp);text-transform:uppercase;font-size:clamp(2.4rem,4vw,3.6rem);line-height:.95;color:#fff}
+.quote-card .serif-i{display:block;font-size:.55em;color:#FFE3C9;margin-top:10px}
+@media (min-width:601px) and (max-width:1000px){
+  .bread-stage{grid-template-columns:minmax(0,1fr) auto;text-align:left;justify-items:start;gap:28px}
+  .bread-copy{justify-items:start}
+  .bread-copy .serif-i{display:block;font-size:1.3rem}
+  .bread-stage .phone-wrap{height:min(72vh,600px)}
+}
+@media (max-width:900px){.sav-head{grid-template-columns:1fr;gap:6px}.sav-head .hand{display:none}.spol,.quote-card{width:min(66vw,280px)}.sav-head h2{font-size:clamp(2.6rem,9vw,4rem)}}
+
+/* ---------- cakes ---------- */
+#cakes{position:relative;padding-block:clamp(90px,12vw,150px)}
+.cake-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,3vw,44px);align-items:center}
+.cake-copy h2{font-size:clamp(3.4rem,6.6vw,6.2rem);margin-top:8px}
+.cake-copy .serif-i{display:block;color:var(--red);font-size:clamp(1.5rem,2.4vw,2rem);margin-top:12px}
+.cake-copy p.c{color:var(--muted);max-width:38ch;margin-top:16px}
+.arch{position:relative;border-radius:999px 999px 18px 18px;overflow:hidden;aspect-ratio:3/4.3;box-shadow:0 30px 60px -24px rgba(60,30,10,.5)}
+.arch img{width:100%;height:118%;object-fit:cover;will-change:transform}
+.arch-wrap{position:relative}
+.arch-wrap .margin-note{right:-12px;top:22%;transform:rotate(8deg);color:var(--ink)}
+.right-col{display:grid;gap:20px}
+.builder{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:clamp(16px,2.4vw,24px);box-shadow:0 20px 50px -30px rgba(60,30,10,.4);display:grid;gap:14px;min-width:0}
+.builder h3{font-family:var(--serif);text-transform:none;font-weight:600;font-size:1.4rem;line-height:1.2}
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.tab{border:1.5px solid var(--line);background:var(--paper-2);border-radius:12px;padding:6px;cursor:pointer;display:grid;gap:6px;text-align:center;font-size:.72rem;font-weight:700}
+.tab img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px}
+.tab .ico{aspect-ratio:1;border-radius:8px;display:grid;place-items:center;background:var(--paper)}
+.tab span{display:flex;gap:5px;justify-content:center;align-items:center}
+.tab span b{width:18px;height:18px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:.62rem}
+.tab[aria-current="step"]{border-color:var(--red)}
+.tab[aria-current="step"] span b{background:var(--red)}
+.pane{display:none;gap:12px}.pane.on{display:grid}
+.lbl{font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--line);background:var(--paper-2);border-radius:999px;padding:6px 12px;min-height:36px;font-size:.88rem;cursor:pointer}
+.chip[aria-checked="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper-2)}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.field{display:grid;gap:5px;min-width:0}
+.field label{font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.field input,.field textarea{width:100%;min-width:0;min-height:44px;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px}
+.field textarea{min-height:70px;resize:vertical}
+.field.bad input{border-color:var(--red)}
+.err{color:var(--red);font-size:.88rem;font-weight:500}
+.navrow{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ghost{background:none;border:0;font-weight:700;cursor:pointer;padding:8px 0}
+.sum{font-size:.85rem;color:var(--muted)}
+.done pre{white-space:pre-wrap;background:var(--paper-2);border:1.5px dashed var(--line);border-radius:12px;padding:12px;margin:8px 0 0;font-family:var(--body);font-size:.88rem;max-height:220px;overflow:auto}
+.zomato{position:relative;background:var(--red);color:#fff;border-radius:20px;padding:22px 20px;display:grid;justify-items:center;text-align:center;gap:2px;overflow:hidden}
+.zomato .zl{font-weight:700;font-size:1.3rem;letter-spacing:-.02em;font-style:italic}
+.zomato .t3{font-family:var(--disp);font-size:3rem;line-height:1}
+.zomato .cb{font-family:var(--disp);font-size:1.3rem;letter-spacing:.04em}
+.zomato .yr{font-size:.85rem;opacity:.9}
+.zomato svg.laurel{position:absolute;top:50%;width:64px;height:120px;transform:translateY(-50%);stroke:#FFD9A8;fill:none;stroke-width:2}
+.zomato svg.l{left:8px}.zomato svg.r{right:8px;transform:translateY(-50%) scaleX(-1)}
+@media (max-width:1100px){.cake-grid{grid-template-columns:1fr 1fr}.cake-copy{grid-column:1 / -1}}
+@media (max-width:720px){.cake-grid{grid-template-columns:1fr}.arch{max-width:420px;margin-inline:auto}}
+.cake-gallery{margin-top:clamp(60px,8vw,110px)}
+.cg-head{display:grid;gap:6px;margin-bottom:28px}
+.cg-head h3{font-size:clamp(2rem,4.4vw,3.6rem);line-height:1}
+.cg-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(14px,2vw,26px)}
+.cg-card{margin:0;background:var(--card);border-radius:18px;padding:10px 10px 16px;box-shadow:0 1px 0 var(--line),0 18px 40px -24px rgba(60,30,10,.45);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;cursor:pointer;outline:none}
+.cg-card:nth-child(odd){transform:rotate(-1.2deg)}.cg-card:nth-child(even){transform:rotate(1deg) translateY(18px)}
+.cg-card:hover,.cg-card:focus-visible{transform:rotate(0) translateY(-8px);box-shadow:0 1px 0 var(--line),0 30px 60px -26px rgba(60,30,10,.6)}
+.cg-card:focus-visible{outline:2px solid var(--orange);outline-offset:4px}
+.cg-card.tart{cursor:default}
+.cg-ph{border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#e9dcc6}
+.cg-ph img{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.cg-card:hover .cg-ph img{transform:scale(1.07)}
+.cg-card figcaption{display:grid;gap:2px;padding:12px 6px 0}
+.cg-card b{font-family:var(--serif);font-style:italic;font-size:1.25rem;font-weight:600}
+.cg-card span{color:var(--muted);font-size:.9rem}
+.cg-card em{font-style:normal;font-weight:700;font-size:.82rem;color:var(--orange);margin-top:6px;letter-spacing:.02em}
+@media (max-width:1000px){.cg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.cg-card b{font-size:1.05rem}.cg-card span{display:none}}
+
+.veg{display:flex;align-items:center;gap:10px;font-weight:600;color:#2f6b2a;background:#eef6e9;border:1px solid #cfe3c4;border-radius:12px;padding:10px 14px;margin:0}
+.vegdot{width:16px;height:16px;border:2px solid #2f8a2a;border-radius:3px;display:grid;place-items:center;flex:none}.vegdot::after{content:"";width:7px;height:7px;border-radius:50%;background:#2f8a2a}
+.lbl2{display:block;font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.lbl2 em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:400}
+.field .drop{display:flex;align-items:center;gap:14px;border:1.5px dashed var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;background:var(--paper-2);transition:border-color .2s,background .2s;font-size:1rem;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:400;position:relative}
+.field .drop:hover,.field .drop:focus-within{border-color:var(--orange);background:#fff7ec}
+.drop input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.dz-ico{width:44px;height:44px;border-radius:12px;background:var(--red);color:#fff;display:grid;place-items:center;font-size:1.5rem;flex:none}
+.dz-t{display:grid;gap:2px}.dz-t small{color:var(--muted);font-size:.82rem;line-height:1.35}
+.refprev{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px;background:#fff}
+.refprev img{width:72px;height:72px;object-fit:cover;border-radius:10px;flex:none}
+.refprev div{display:grid;gap:2px;min-width:0}.refprev b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem}.refprev small{color:var(--muted);font-size:.8rem}
+.ghost.sm{justify-self:start;padding:4px 0;font-size:.85rem}
+.hall-c{max-width:46ch;color:#f3e3cf}
+.btn.wa{background:#1FA855;border-color:#1FA855;width:100%;justify-content:center;margin-top:12px;font-size:1.05rem}.btn.wa:hover{background:#178c46}
+
+/* ---------- hall + visit ---------- */
+.hall{position:relative;min-height:90vh;display:grid;align-items:end;overflow:hidden;color:#fff}
+.hall video{position:absolute;inset:-12% 0;width:100%;height:124%;object-fit:cover;max-width:none;will-change:transform}
+.hall::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(20,10,6,.85),rgba(20,10,6,.15) 60%)}
+.hall .wrap{position:relative;z-index:1;padding-block:80px;display:grid;gap:16px}
+.hall h2{font-size:clamp(3.4rem,8vw,7.6rem)}
+.hall .serif-i{color:#FFD2A8;font-size:clamp(1.6rem,3vw,2.6rem);display:block}
+#visit{overflow:clip;background:var(--ink);color:var(--paper-2);position:relative;overflow:hidden}
+#visit .wrap{padding-block:clamp(80px,10vw,130px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,70px);align-items:center}
+#visit .shop{border-radius:20px;overflow:hidden;transform:rotate(-2deg);box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
+#visit .shop img{width:100%;aspect-ratio:4/3;object-fit:cover}
+#visit h2{font-size:clamp(3.2rem,7vw,6rem)}
+#visit h2 .serif-i{color:var(--orange-2)}
+.info{display:grid;gap:18px;margin-top:26px}
+.info .k{font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--orange-2)}
+.copy{background:none;border:0;color:var(--orange-2);font-weight:700;cursor:pointer;padding:0;margin-left:8px}
+#visit .sketch2{position:absolute;right:-6%;bottom:-8%;width:52%;opacity:.12;filter:invert(1)}
+@media (max-width:900px){#visit .wrap{grid-template-columns:1fr}}
+footer{background:var(--ink);color:#bba893;border-top:1px solid #33261f;padding-block:28px 48px;font-size:.86rem}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){.btn .ar{transition:none}}
+</style>
+</head>
+<body>
+
+<div id="loader" aria-hidden="true"><div class="c2"></div><div class="in">
+  <img class="lg" src="img/logo.png" alt="">
+  <div class="oven"><div class="oven-top"><span class="knob"><i id="k1"></i></span><span class="knob"><i id="k2"></i></span><span class="lbl">Symphony bake</span><span class="lamp" id="lamp"></span></div>
+    <div class="oven-body"><div class="door" id="door"><span class="handle"></span><div class="win">
+      <div class="glow" id="glow"></div><span class="coil t" id="c1"></span><span class="coil b" id="c2"></span>
+      <span class="heat h1"></span><span class="heat h2"></span><span class="heat h3"></span>
+      <svg viewBox="0 0 200 110"><g id="dome" style="transform-origin:100px 70px;transform:scaleY(.45)"><path id="crust" d="M28 72C28 34 60 16 100 16s72 18 72 56z" fill="#EADBC2"/><g id="oats" opacity="0" fill="#F4E3BF"><ellipse cx="70" cy="34" rx="5" ry="2.4" transform="rotate(-20 70 34)"/><ellipse cx="96" cy="26" rx="5" ry="2.4" transform="rotate(10 96 26)"/><ellipse cx="124" cy="31" rx="5" ry="2.4" transform="rotate(25 124 31)"/><ellipse cx="84" cy="46" rx="5" ry="2.4" transform="rotate(-5 84 46)"/><ellipse cx="112" cy="45" rx="5" ry="2.4" transform="rotate(30 112 45)"/><ellipse cx="146" cy="48" rx="5" ry="2.4" transform="rotate(40 146 48)"/><ellipse cx="54" cy="52" rx="5" ry="2.4" transform="rotate(-35 54 52)"/></g></g><path d="M22 68h156l-10 40H32z" fill="#8f8a85"/><path d="M22 68h156l-2 7H24z" fill="#c9c3bc"/></svg>
+      <div class="shine"></div></div></div></div></div>
+  <div class="temp"><span id="pct">0</span><sup>°C</sup></div>
+  <div class="bar2"><i id="lbar"></i></div>
+  <div class="hand" id="lmsg">preheating the oven…</div>
+</div></div>
+<canvas id="crumbs" aria-hidden="true"></canvas>
+<div id="cur" data-k="bread" aria-hidden="true">
+  <div class="ring" id="curlabel">Taste</div>
+  <div class="ic">
+    <svg class="i-bread" viewBox="0 0 64 64"><path d="M7 41c0-15 11.2-25 25-25s25 10 25 25v5a5 5 0 0 1-5 5H12a5 5 0 0 1-5-5z" fill="#C9843A" stroke="#4a2a12" stroke-width="2.5"/><path d="M12 38c2-10 10-17 20-17" stroke="#E9B06A" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M22 27l6 9M32 24l6 10M42 27l5 8" stroke="#FBE2B8" stroke-width="3.6" stroke-linecap="round"/><circle cx="18" cy="44" r="1.4" fill="#4a2a12"/><circle cx="30" cy="46" r="1.4" fill="#4a2a12"/><circle cx="44" cy="44" r="1.4" fill="#4a2a12"/></svg>
+    <svg class="i-samosa" viewBox="0 0 64 64"><path d="M32 8c1.8 0 3 .9 3.9 2.4l20 35.4c1.7 3-.4 6.2-3.8 6.2H11.9c-3.4 0-5.5-3.2-3.8-6.2l20-35.4C29 8.9 30.2 8 32 8z" fill="#D9A043" stroke="#4a2a12" stroke-width="2.5" stroke-linejoin="round"/><path d="M32 12L20 46" stroke="#B9782A" stroke-width="2.5" stroke-linecap="round"/><path d="M14 48l3-3 3 3 3-3 3 3 3-3 3 3 3-3 3 3 3-3 3 3 3-3 3 3" stroke="#8a5420" stroke-width="2" fill="none" stroke-linejoin="round"/><circle cx="36" cy="30" r="1.6" fill="#7a4a1a"/><circle cx="40" cy="38" r="1.6" fill="#7a4a1a"/><circle cx="30" cy="38" r="1.6" fill="#7a4a1a"/></svg>
+    <svg class="i-cake" viewBox="0 0 64 64"><path d="M8 32 52 18v32L8 54z" fill="#5a2e1a" stroke="#2a140b" stroke-width="2.5" stroke-linejoin="round"/><path d="M8 40l44-12M8 47l44-11" stroke="#F7E6CF" stroke-width="4"/><path d="M8 32 52 18 56 22 12 36z" fill="#F7E6CF" stroke="#2a140b" stroke-width="2" stroke-linejoin="round"/><path d="M12 36l4 4 4-5 4 4 4-5 4 4 4-5 4 4 4-5 4 4 4-4" stroke="#F7E6CF" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="40" cy="16" r="5" fill="#D7261C" stroke="#2a140b" stroke-width="2"/><path d="M40 11q2-6 7-7" stroke="#2f6b2a" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+  </div>
+</div>
+
+<header class="top" id="hdr"><div class="wrap bar">
+  <a class="logo" href="#top" aria-label="Cafe Symphony home"><img src="img/logo.png" alt="Café Symphony, Cake's &amp; Pizzeria" width="1100" height="260"></a>
+  <nav class="main" aria-label="Main"><a href="#breads" data-cur="Bake">Breads</a><a href="#savouries" data-cur="Fresh">Bread Shelf</a><a href="#cakes" data-cur="Sweet">Custom Cakes</a><a href="#visit" data-cur="Visit">Visit us</a></nav>
+  <a class="btn mag" href="#builder" data-cur="Order">Order a cake <span class="ar">→</span></a>
+</div></header>
+
+<main id="top">
+<!-- HERO -->
+<section class="hero" data-zone="bread"><div class="wrap">
+  <div class="hero-grid">
+    <div>
+      <p class="eyebrow">Café Symphony · Chhatrapati Sambhajinagar</p>
+      <h1><span class="mask"><span>Freshly baked.</span></span><span class="mask"><span>Freshly served.</span></span></h1>
+      <p class="sub"><span class="mask"><span>a symphony of sweetness.</span></span></p>
+      <p class="lede">From our heritage ovens to your celebrations. Multigrain bread, khari, bun maska and pav from our own ovens every morning, and custom cakes for every occasion.</p>
+      <div class="cta"><a class="btn mag" href="#breads" data-cur="Taste">Explore the bakery <span class="ar">→</span></a><a class="play" href="#breads" data-cur="Play"><i>▶</i>Watch it being baked</a></div>
+      <div class="award-chip"><span class="z">3</span><div><b>Top 3 · Cakes &amp; Bakery</b><span>Zomato Restaurant Awards 2025, Aurangabad</span></div></div>
+    </div>
+    <div class="phone-wrap" id="heroPhone"><div class="phone"><div class="scr">
+      <span class="notch"></span>
+      <video src="vid/cakes.mp4" poster="vid/cakes.jpg" muted loop playsinline autoplay preload="auto" aria-label="Cafe Symphony reel: Cakes made like magic"></video>
+      <canvas id="reelCv" hidden aria-label="Cafe Symphony reel: Cakes made like magic"></canvas>
+      <div class="ig"><span class="cap">Cakes made like magic</span>
+        <div class="side"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 21s-7-4.4-9.3-9A5.4 5.4 0 0 1 12 6.6 5.4 5.4 0 0 1 21.3 12C19 16.6 12 21 12 21z"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 12a8.5 8.5 0 0 1-12.4 7.6L3 21l1.4-5.6A8.5 8.5 0 1 1 21 12z"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 3 11 14M22 3l-7 19-4-8-8-4z"/></svg></div>
+        <span class="u"><i></i>cafe.symphony_csn</span><span>Cakes made like magic at Cafe Symphony.</span></div>
+    </div></div></div>
+    <div class="side-col">
+      <p class="hand top">Good food.<br>Good mood. ♡</p>
+      <img class="sketch" src="img/maqbara.png" alt="Ink sketch of Bibi Ka Maqbara, Aurangabad" width="960" height="640">
+      <p class="hand">From Chhatrapati<br>Sambhajinagar, with love ♥</p>
+    </div>
+  </div>
+  <div class="feats">
+    <div class="feat"><svg viewBox="0 0 40 40"><path d="M6 26c0-8 6-13 14-13s14 5 14 13v3a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M14 19l3 5M20 17l3 6M26 19l2 4"/></svg>Baked fresh daily</div>
+    <div class="feat"><svg viewBox="0 0 40 40"><path d="M20 34V12M20 16c-4-4-8-4-10-2 2 3 6 4 10 2zM20 22c4-4 8-4 10-2-2 3-6 4-10 2zM20 28c-4-4-8-4-10-2 2 3 6 4 10 2z"/></svg>Real ingredients</div>
+    <div class="feat"><svg viewBox="0 0 40 40"><path d="M8 16h20v8a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8zM28 18h3a3 3 0 0 1 0 6h-3M14 6c-1 2 1 3 0 5M20 6c-1 2 1 3 0 5"/></svg>Great coffee</div>
+    <div class="feat"><svg viewBox="0 0 40 40"><path d="M8 32V14l12-6 12 6v18M8 32h24M16 32v-8h8v8"/><path d="M14 18h12"/></svg>Party hall</div>
+  </div>
+</div></section>
+
+<div class="ticker" aria-hidden="true"><div class="row" id="tick"></div></div>
+
+<!-- BREADS -->
+<section id="breads" data-zone="bread" aria-labelledby="h-breads">
+  <div class="giant" id="giant" aria-hidden="true">MULTIGRAIN · MULTIGRAIN</div>
+  <div class="bread-pin" id="breadPin">
+    <div class="wrap bread-stage">
+      <div class="bread-copy">
+        <span class="no">No. 1</span>
+        <h2 id="h-breads">The Breads</h2>
+        <span class="serif-i">Real ingredients.<br>Real flavour.</span>
+        <p class="c">Freshly baked, freshly served. Our multigrain bread is mixed, shaped, rolled in oats and baked in-house every single day.</p>
+        <ol class="steps" id="steps">
+          <li class="on"><b>1</b>Real grains, real dough</li>
+          <li><b>2</b>Rolled in oats by hand</li>
+          <li><b>3</b>Rested in the tins</li>
+          <li><b>4</b>Out of the oven, every morning</li>
+        </ol>
+        <div class="philo"><span>Baked daily</span><span>Made in-house</span><span>Real ingredients</span></div>
+      </div>
+      <div class="phone-wrap"><div class="phone"><div class="scr"><span class="notch"></span><canvas id="seq" aria-label="Cafe Symphony's multigrain bread being made, from mixing to baked loaves"></canvas>
+        <div class="ig"><span class="u"><i></i>cafe.symphony_csn</span><span>Fresh Multigrain Bread</span></div></div></div></div>
+      <div class="pol-stack">
+        <figure class="pol p1" data-i="0"><img src="loaf/s005.jpg" alt="Grains and dough in the mixer"><figcaption>Mixed in-house</figcaption></figure>
+        <figure class="pol p2" data-i="1"><img src="img/bread_7.0.jpg" alt="Dough being rolled in oats and seeds"><figcaption>Rolled in oats</figcaption></figure>
+        <figure class="pol p3" data-i="2"><img src="loaf/s072.jpg" alt="Shaped dough resting in bread tins"><figcaption>Rested in tins</figcaption></figure>
+        <figure class="pol p4" data-i="3"><img src="img/bread_0.4.jpg" alt="Baked multigrain loaves"><figcaption>Out of the oven</figcaption></figure>
+        <span class="margin-note" style="right:-2%;top:-6%">Good bread,<br>brighter days.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BREAD SHELF -->
+<section id="savouries" data-zone="bread" aria-labelledby="h-sav">
+  <div class="sav-pin" id="savPin">
+    <div class="sav-stage">
+      <div class="wrap sav-head">
+        <div><span class="no">No. 2</span><h2 id="h-sav">The Bread Shelf</h2><span class="serif-i">Out of our ovens, every single day.</span></div>
+        <p class="hand">Garam garam,<br>fresh fresh!</p>
+      </div>
+      <div class="sav-track" id="savTrack">
+        <figure class="spol"><img src="img/bread_0.4.jpg" alt="Multigrain bread loaves fresh from the oven"><figcaption>Multigrain Bread</figcaption><span class="sticky">Made daily, in-house</span></figure>
+        <figure class="spol"><img src="img/z_khari1.jpg" alt="Cafe Symphony multigrain khari"><figcaption>Multigrain Khari</figcaption><span class="sticky l">Khari + chai = sorted</span></figure>
+        <figure class="spol"><img src="img/b_bunmaska.jpg" alt="Bun maska with cutting chai"><figcaption>Bun Maska</figcaption><span class="sticky">Bun maska chai in this rain?</span></figure>
+        <div class="quote-card">Monsoon calories<span class="serif-i">don't count. It's basic science.</span></div>
+        <figure class="spol"><img src="img/b_pav.jpg" alt="A tray of fresh ladi pav"><figcaption>Ladi Pav</figcaption><span class="sticky l">Pav bhaji ka asli hero</span></figure>
+        <figure class="spol"><img src="img/b_milkloaf.jpg" alt="Sliced milk bread loaf on a board"><figcaption>Milk Bread</figcaption><span class="sticky">Sandwich-ready every morning</span></figure>
+        <figure class="spol"><img src="img/p20.jpg" alt="Garlic bread with cheese"><figcaption>Garlic Bread</figcaption><span class="sticky l">Butter. Garlic. Cheese.</span></figure>
+        <figure class="spol"><img src="img/p11.jpg" alt="Freshly baked cookies"><figcaption>Fresh Cookies</figcaption><span class="sticky">Happiness, but round</span></figure>
+        <div class="quote-card">Freshly baked.<span class="serif-i">Freshly served.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAKES -->
+<section id="cakes" data-zone="cake" aria-labelledby="h-cakes"><div class="wrap">
+  <div class="cake-grid">
+    <div class="cake-copy">
+      <span class="no">No. 3</span>
+      <h2 id="h-cakes">Custom<br>Cakes</h2>
+      <span class="serif-i">Sad? Sweeten it.<br>Happy? Celebrate it.</span>
+      <p class="c">Birthdays, anniversaries or just because. Pick a flavour from our counter, choose the look and the message, and we'll bake it for your day.</p>
+      <div style="margin-top:24px"><a class="btn mag" href="#builder" data-cur="Bake it">Design your cake <span class="ar">→</span></a></div>
+    </div>
+    <div class="arch-wrap"><div class="arch" id="arch"><img src="img/z_c42.jpg" alt="Cafe Symphony's Dutch Truffle cake with chocolate shards and cherries"></div><span class="margin-note">Made like<br>magic ✦</span></div>
+    <div class="right-col">
+      <form class="builder" id="builder" novalidate>
+        <h3>Build your cake in 4 easy steps</h3>
+        <div class="tabs" id="tabs" role="tablist">
+          <button type="button" class="tab" data-g="0"><img src="img/z_c45.jpg" alt=""><span><b>1</b>Flavour</span></button>
+          <button type="button" class="tab" data-g="1"><img src="img/z_c44.jpg" alt=""><span><b>2</b>Design</span></button>
+          <button type="button" class="tab" data-g="2"><div class="ico"><span class="hand" style="font-size:1.05rem;color:var(--red)">Happy<br>Birthday</span></div><span><b>3</b>Message</span></button>
+          <button type="button" class="tab" data-g="3"><div class="ico"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#1A120E" stroke-width="1.8"><path d="M3 4h2l2.4 11h11l2-8H6.2"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></div><span><b>4</b>Order</span></button>
+        </div>
+        <div class="pane" data-p="0"><div><span class="lbl">Flavour, from our counter</span><div class="chips" data-k="flavour"></div></div><p class="veg"><span class="vegdot" aria-hidden="true"></span>Every cake is 100% eggless. We're a pure veg cafe.</p></div>
+        <div class="pane" data-p="1"><div><span class="lbl">Occasion</span><div class="chips" data-k="occasion"></div></div><div><span class="lbl">Style</span><div class="chips" data-k="style"></div></div><div><span class="lbl">Size</span><div class="chips" data-k="size"></div></div></div>
+        <div class="pane" data-p="2"><div class="field"><label for="msg">Message on the cake</label><input id="msg" maxlength="40" placeholder="Happy Birthday Aai"></div><div class="field"><label for="notes">Theme or ideas</label><textarea id="notes" placeholder="Colours, a character, a photo idea"></textarea></div>
+          <div class="field"><span class="lbl2">Reference photo <em>(optional)</em></span>
+            <label class="drop" id="drop" for="ref"><input id="ref" type="file" accept="image/*"><span class="dz-ico" aria-hidden="true">＋</span><span class="dz-t"><b>Upload a photo</b><small>A cake you love, a theme, or a photo to print on the cake</small></span></label>
+            <div class="refprev" id="refprev" hidden><img id="refimg" alt="Your reference photo"><div><b id="refname"></b><small>Stays on your phone until you send it to the cafe.</small><button type="button" class="ghost sm" id="refrm">Remove</button></div></div>
+          </div></div>
+        <div class="pane" data-p="3"><div class="fg">
+          <div class="field" id="f-date"><label for="date">Date needed</label><input id="date" type="date"></div>
+          <div class="field" id="f-name"><label for="name">Your name</label><input id="name" autocomplete="name"></div>
+          <div class="field" id="f-phone"><label for="phone">Mobile</label><input id="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="98XXXXXXXX"></div>
+        </div></div>
+        <p class="err" id="err" role="alert" hidden></p>
+        <p class="sum" id="sum"></p>
+        <div class="navrow" id="navrow"><button type="button" class="ghost" id="back">← Back</button><button type="button" class="btn" id="next" data-cur="Next">Next <span class="ar">→</span></button></div>
+        <div class="done" id="done" hidden>
+          <p style="font-weight:700">Almost done! Send your order on WhatsApp.</p>
+          <p class="sum">Tap the green button. WhatsApp opens with your order already written to Cafe Symphony (+91 78210 13410). Just press send. We'll reply to confirm the price and pickup.</p>
+          <pre id="out"></pre>
+          <p class="sum" id="refnote" hidden>📎 After sending, attach your reference photo in the same WhatsApp chat.</p>
+          <a class="btn wa" id="wa" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4 5.2 5.2 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>Send order on WhatsApp</a>
+          <div class="navrow" style="margin-top:10px;flex-wrap:wrap;gap:10px"><button type="button" class="ghost" id="again">Start again</button><button type="button" class="ghost" id="copy">Copy message</button></div>
+        </div>
+      </form>
+      <div class="zomato">
+        <svg class="laurel l" viewBox="0 0 64 120"><path d="M50 110C20 90 12 50 30 10"/><path d="M38 96c-10 2-16-2-18-8 8-2 14 1 18 8zM31 80c-10 0-15-5-16-11 8 0 13 4 16 11zM27 63c-9-2-13-8-13-14 8 1 12 6 13 14zM27 46c-8-4-10-10-9-16 7 3 10 9 9 16zM31 30c-6-5-7-11-5-17 6 4 8 10 5 17z"/></svg>
+        <svg class="laurel r" viewBox="0 0 64 120"><path d="M50 110C20 90 12 50 30 10"/><path d="M38 96c-10 2-16-2-18-8 8-2 14 1 18 8zM31 80c-10 0-15-5-16-11 8 0 13 4 16 11zM27 63c-9-2-13-8-13-14 8 1 12 6 13 14zM27 46c-8-4-10-10-9-16 7 3 10 9 9 16zM31 30c-6-5-7-11-5-17 6 4 8 10 5 17z"/></svg>
+        <span class="zl">zomato</span><span class="t3">TOP 3</span><span class="cb">CAKES &amp; BAKERY</span><span class="yr">Restaurant Awards 2025 · Aurangabad</span>
+      </div>
+    </div>
+  </div>
+  <div class="cake-gallery">
+    <div class="cg-head"><p class="eyebrow" style="color:var(--orange-2)">On the counter today</p><h3>Pick one. We'll make it yours.</h3><span class="serif-i">real cakes, straight from our counter.</span></div>
+    <div class="cg-grid"><figure class="cg-card" data-i="0" tabindex="0" role="button"><div class="cg-ph"><img src="img/z_c42.jpg" alt="Cake from Cafe Symphony's counter" loading="lazy"></div><figcaption><b class="cname">On the counter</b><em>Make this mine →</em></figcaption></figure><figure class="cg-card" data-i="1" tabindex="0" role="button"><div class="cg-ph"><img src="img/z_c43.jpg" alt="Cake from Cafe Symphony's counter" loading="lazy"></div><figcaption><b class="cname">On the counter</b><em>Make this mine →</em></figcaption></figure><figure class="cg-card" data-i="2" tabindex="0" role="button"><div class="cg-ph"><img src="img/z_c44.jpg" alt="Cake from Cafe Symphony's counter" loading="lazy"></div><figcaption><b class="cname">On the counter</b><em>Make this mine →</em></figcaption></figure><figure class="cg-card" data-i="3" tabindex="0" role="button"><div class="cg-ph"><img src="img/z_c45.jpg" alt="Cake from Cafe Symphony's counter" loading="lazy"></div><figcaption><b class="cname">On the counter</b><em>Make this mine →</em></figcaption></figure><figure class="cg-card" data-i="4" tabindex="0" role="button"><div class="cg-ph"><img src="img/z_c46.jpg" alt="Cake from Cafe Symphony's counter" loading="lazy"></div><figcaption><b class="cname">On the counter</b><em>Make this mine →</em></figcaption></figure><figure class="cg-card" data-i="5" tabindex="0" role="button"><div class="cg-ph"><img src="img/z_c47.jpg" alt="Cake from Cafe Symphony's counter" loading="lazy"></div><figcaption><b class="cname">On the counter</b><em>Make this mine →</em></figcaption></figure><figure class="cg-card" data-i="6" tabindex="0" role="button"><div class="cg-ph"><img src="img/z_c48.jpg" alt="Cake from Cafe Symphony's counter" loading="lazy"></div><figcaption><b class="cname">On the counter</b><em>Make this mine →</em></figcaption></figure><figure class="cg-card" data-i="7" tabindex="0" role="button"><div class="cg-ph"><img src="img/z_c49.jpg" alt="Cake from Cafe Symphony's counter" loading="lazy"></div><figcaption><b class="cname">On the counter</b><em>Make this mine →</em></figcaption></figure></div>
+  </div>
+</div></section>
+
+<!-- HALL -->
+<section class="hall" data-zone="cake" aria-labelledby="h-hall">
+  <video id="hallImg" poster="vid/hall.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Cafe Symphony's party hall and dining spaces"><source src="vid/hall.mp4" type="video/mp4"><source src="vid/hall.webm" type="video/webm"></video>
+  <div class="wrap"><p class="eyebrow" style="color:#FFD2A8">Celebrate with us</p><h2 id="h-hall">Our stunning cafe</h2><span class="serif-i">a special evening, beautifully hosted.</span><p class="hall-c">Birthdays, parties, get-togethers and events. One of the biggest cafes in Aurangabad, with its own party hall.</p><div><a class="btn light mag" href="#visit" data-cur="Book">Book the hall <span class="ar">→</span></a></div></div>
+</section>
+
+<!-- VISIT -->
+<section id="visit" data-zone="bread" aria-labelledby="h-visit">
+  <img class="sketch2" src="img/maqbara.png" alt="">
+  <div class="wrap">
+    <div class="shop"><img src="img/p8.jpg" alt="Cafe Symphony shopfront with its red sign"></div>
+    <div>
+      <p class="eyebrow" style="color:var(--orange-2)">Come say hi</p>
+      <h2 id="h-visit" style="margin-top:12px">Find us <span class="serif-i">on Station Road</span></h2>
+      <div class="info">
+        <div><p class="k">Address</p><p id="addr">Railway Station Rd, beside Kailash Veg Restaurant, Konkanwadi, Chhatrapati Sambhajinagar 431005</p><button class="copy" data-c="addr">Copy</button></div>
+        <div><p class="k">Call</p><p id="ph" style="font-family:var(--disp);font-size:2.2rem;letter-spacing:.03em">098231 05936</p><button class="copy" data-c="ph">Copy</button></div>
+        <div><p class="k">Cake orders on WhatsApp</p><p id="wa2" style="font-family:var(--disp);font-size:2.2rem;letter-spacing:.03em">078210 13410</p><a class="copy" href="https://wa.me/917821013410?text=Hi%20Cafe%20Symphony!%20I%27d%20like%20to%20order%20a%20cake." target="_blank" rel="noopener">Chat on WhatsApp</a></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn mag" href="https://www.google.com/maps/place/Cafe+Symphony+(Cake+%26+Pizzeria)/@19.867029,75.3191824,17z" target="_blank" rel="noopener" data-cur="Go">Get directions <span class="ar">→</span></a><a class="btn light mag" href="https://www.instagram.com/cafe.symphony_csn/" target="_blank" rel="noopener" data-cur="Follow">@cafe.symphony_csn</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<footer><div class="wrap"><span>Café Symphony · Cake's &amp; Pizzeria · Chhatrapati Sambhajinagar</span><span class="hand" style="color:#e9c9a6;font-size:1.4rem">Good food. Good mood.</span></div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fine=matchMedia("(pointer: fine)").matches;
+
+/* content */
+const T=["Freshly baked","Multigrain bread","Multigrain khari","Bun maska chai","Ladi pav","Cakes made like magic","Good food, good mood"];
+$("tick").innerHTML=[...T,...T,...T].map(t=>`<span>${t}</span>`).join("");
+
+/* ---------- bread frame sequence ---------- */
+const N=176,frames=new Array(N),cv=$("seq"),cx=cv.getContext("2d");const st={f:0};let loaded=0;
+const KEY=[];for(let i=0;i<N;i+=4)KEY.push(i);if(KEY[KEY.length-1]!==N-1)KEY.push(N-1);const NK=KEY.length;let keyLoaded=0;
+const fok=i=>{const im=frames[i];return im&&im.complete&&im.naturalWidth>0};
+function near(i){if(fok(i))return i;for(let d=1;d<N;d++){if(i-d>=0&&fok(i-d))return i-d;if(i+d<N&&fok(i+d))return i+d}return -1}
+function fit(){const r=Math.min(devicePixelRatio||1,1.5);const w=Math.max(1,Math.round(cv.clientWidth*r)),h=Math.max(1,Math.round(cv.clientHeight*r));if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}draw(true)}
+let lastKey="";
+function paint(im,a){const s=Math.max(cv.width/im.naturalWidth,cv.height/im.naturalHeight),w=im.naturalWidth*s,h=im.naturalHeight*s;cx.globalAlpha=a;cx.drawImage(im,(cv.width-w)/2,(cv.height-h)/2,w,h);cx.globalAlpha=1}
+function draw(force){const f=Math.max(0,Math.min(N-1,st.f)),i0=Math.floor(f),fr=f-i0;const a=near(i0);if(a<0)return;
+  const b=(fr>.04&&i0+1<N&&fok(i0+1)&&a===i0)?i0+1:-1;const key=a+"|"+(b<0?0:Math.round(fr*12));if(key===lastKey&&force!==true)return;lastKey=key;
+  paint(frames[a],1);if(b>=0)paint(frames[b],Math.round(fr*12)/12)}
+const load=(i,cb)=>{const im=new Image();im.decoding="async";im.onload=im.onerror=()=>{loaded++;cb&&cb();if(i===0||Math.abs(i-Math.round(st.f))<3)draw(true)};im.src="loaf/s"+String(i+1).padStart(3,"0")+".jpg";frames[i]=im};
+KEY.forEach(i=>load(i,()=>{keyLoaded++;if(keyLoaded===1)fit();if(keyLoaded===NK){for(let i=0;i<N;i++)if(!frames[i])load(i)}}));
+addEventListener("resize",fit);
+
+/* ---------- loader ---------- */
+const MSG=[[0,"preheating the oven…"],[.3,"dough is rising…"],[.6,"crust going golden…"],[.9,"garam garam, almost ready!"]];
+const mix=(a,b,t)=>"#"+a.map((v,i)=>Math.round(v+(b[i]-v)*t).toString(16).padStart(2,"0")).join("");
+let lastMsg=-1;
+function bake(p){p=Math.max(0,Math.min(1,p));const e=(id)=>document.getElementById(id);if(!e("glow"))return;
+  e("glow").style.opacity=(p*.95).toFixed(3);
+  const coil=mix([59,26,14],[255,120,40],Math.min(1,p*1.6));e("c1").style.background=coil;e("c2").style.background=coil;
+  e("c1").style.boxShadow=e("c2").style.boxShadow=`0 0 ${Math.round(p*16)}px ${Math.round(p*3)}px rgba(255,120,40,${(p*.8).toFixed(2)})`;
+  const r=Math.min(1,p/.6),b=Math.max(0,(p-.45)/.55);
+  e("dome").style.transform=`scaleY(${(.45+.55*(1-Math.pow(1-r,2))).toFixed(3)})`;
+  e("crust").setAttribute("fill",b?mix([234,219,194],[160,86,34],b):"#EADBC2");e("oats").setAttribute("opacity",(b).toFixed(2));
+  e("lamp").classList.toggle("on",p>.02);e("lbar").style.transform=`scaleX(${p.toFixed(3)})`;
+  e("k1").style.transform=`rotate(${(-120+p*240).toFixed(1)}deg)`;e("k2").style.transform=`rotate(${(-60+p*120).toFixed(1)}deg)`;
+  document.querySelector(".win").style.setProperty("--ho",(p*.9).toFixed(2));
+  let k=0;MSG.forEach((m,i)=>{if(p>=m[0])k=i});if(k!==lastMsg){lastMsg=k;e("lmsg").textContent=MSG[k][1]}}
+function intro(){
+  const L=$("loader"),pct=$("pct");
+  const vid=document.querySelector("#heroPhone video");
+  let vidReady=false;if(vid){if(vid.readyState>=2)vidReady=true;else{["loadeddata","canplay","error"].forEach(ev=>vid.addEventListener(ev,()=>vidReady=true,{once:true}));setTimeout(()=>vidReady=true,3000)}}else vidReady=true;
+  const real=()=>(keyLoaded/NK)*.8+(vidReady?.2:0);           /* real loading progress, 0..1 */
+  const start=performance.now(),MIN=2200,MAX=7000;let shown=0;
+  const finish=()=>{
+    pct.textContent="220";bake(1);
+    if(!window.gsap){L.remove();return}
+    if(reduce){gsap.to(L,{opacity:0,duration:.6,delay:.2,onComplete:()=>{L.remove();window.ensureReel&&ensureReel()}});return}
+    gsap.timeline()
+      .to("#door",{rotateX:-78,duration:.7,ease:"power2.in"},"+=.35")
+      .to("#loader .c2",{clipPath:"circle(150% at 50% 50%)",duration:.75,ease:"power3.in"},"-=.25")
+      .set("#loader .in",{opacity:0})
+      .to("#loader",{yPercent:-100,duration:.8,ease:"power3.inOut"})
+      .add(()=>{L.remove();window.ScrollTrigger&&ScrollTrigger.refresh();window.ensureReel&&ensureReel()})
+      .from(".hero .mask>span",{yPercent:110,duration:1,ease:"power4.out",stagger:.1},"-=.45")
+      .from("#heroPhone",{y:120,rotate:14,opacity:0,duration:1.2,ease:"power3.out"},"<.1")
+      .from(".side-col > *",{y:30,opacity:0,duration:.8,stagger:.12,ease:"power2.out"},"<.3")
+      .from(".hero .lede,.hero .cta,.award-chip,.feat",{y:24,opacity:0,duration:.7,stagger:.06,ease:"power2.out"},"<");
+  };
+  const tick=()=>{
+    const t=performance.now()-start;
+    const target=Math.min(real(),t/MIN,1)*100;            /* never faster than MIN, never ahead of real loading */
+    shown+=(target-shown)*.12;pct.textContent=Math.round(shown*2.2);bake(shown/100);
+    if((shown>99.4&&t>=MIN)||t>MAX)finish();else requestAnimationFrame(tick);
+  };
+  const go=()=>requestAnimationFrame(tick);
+  if(document.visibilityState==="visible")go();else document.addEventListener("visibilitychange",function v(){if(document.visibilityState==="visible"){document.removeEventListener("visibilitychange",v);go()}});
+}
+
+/* ---------- smooth scroll + scroll choreography ---------- */
+let lenis=null;
+if(window.Lenis&&!reduce){lenis=new Lenis({lerp:.09,smoothWheel:true});window.__lenis=lenis;
+  document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener("click",e=>{const t=document.querySelector(a.getAttribute("href"));if(t){e.preventDefault();lenis.scrollTo(t,{offset:-10})}}));}
+if(window.gsap&&window.ScrollTrigger){
+  gsap.registerPlugin(ScrollTrigger);
+  if(lenis){lenis.on("scroll",ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0)}
+  /* header hide on scroll down */
+  let last=0;ScrollTrigger.create({start:0,end:"max",onUpdate:s=>{const y=s.scroll();$("hdr").classList.toggle("solid",y>40);$("hdr").classList.toggle("hide",y>last&&y>400);last=y}});
+  /* ticker drifts with scroll velocity */
+  const tk=gsap.to("#tick",{xPercent:-33.33,ease:"none",duration:30,repeat:-1});
+  let tsT=1;ScrollTrigger.create({onUpdate:s=>{const v=Math.round((1+Math.min(4,Math.abs(s.getVelocity())/400)*s.direction)*4)/4;if(v!==tsT){tsT=v;gsap.to(tk,{timeScale:v,duration:.3,overwrite:true})}}});
+  ScrollTrigger.addEventListener("scrollEnd",()=>{tsT=1;gsap.to(tk,{timeScale:1,duration:.6,overwrite:true})});
+  /* hero phone parallax */
+  gsap.to("#heroPhone",{y:-80,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:true}});
+  gsap.to(".sketch",{y:40,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:true}});
+  /* breads: pinned stage at every width, scrub the real reel, light up steps, drop polaroids */
+  const steps=[...document.querySelectorAll("#steps li")],pols=gsap.utils.toArray(".pol");
+  const setK=p=>{const f=p*(N-1);const k=f<27?0:f<64?1:f<84?2:3;steps.forEach((l,i)=>l.classList.toggle("on",i<=k))};
+  gsap.set(pols,{y:80,opacity:0,rotate:(i)=>[-14,12,-10,14][i]});
+  gsap.timeline({scrollTrigger:{trigger:"#breadPin",start:"top top",end:"bottom bottom",scrub:.8,onUpdate:s=>setK(s.progress),onRefresh:()=>{fit()}}})
+    .to(st,{f:N-1,ease:"none",duration:1,onUpdate:draw},0)
+    .to(pols,{y:0,opacity:1,rotate:(i)=>[-5,6,3,-7][i],stagger:.18,duration:.25,ease:"back.out(1.6)"},.05);
+  gsap.fromTo("#giant",{xPercent:5},{xPercent:-45,ease:"none",scrollTrigger:{trigger:"#breads",start:"top bottom",end:"bottom top",scrub:true}});
+  /* bread shelf: horizontal pinned polaroids at every width */
+  const tr=$("savTrack");const dist=()=>Math.max(0,tr.scrollWidth-innerWidth+40);
+  gsap.to(tr,{x:()=>-dist(),ease:"none",scrollTrigger:{trigger:"#savPin",start:"top top",end:"bottom bottom",scrub:.5,invalidateOnRefresh:true}});
+  gsap.utils.toArray(".sticky").forEach(s=>gsap.from(s,{scale:0,rotate:-40,duration:.6,ease:"back.out(2)",scrollTrigger:{trigger:"#savPin",start:"top 40%"}}));
+  /* cakes */
+  gsap.from("#arch",{clipPath:"inset(100% 0 0 0 round 999px 999px 18px 18px)",duration:1.4,ease:"power4.inOut",scrollTrigger:{trigger:"#arch",start:"top 80%"}});
+  gsap.fromTo("#arch img",{yPercent:-12},{yPercent:0,ease:"none",scrollTrigger:{trigger:"#arch",start:"top bottom",end:"bottom top",scrub:true}});
+  gsap.from(".builder,.zomato",{y:60,opacity:0,duration:1,stagger:.15,ease:"power3.out",scrollTrigger:{trigger:".right-col",start:"top 82%"}});
+  gsap.from(".zomato svg.laurel",{scale:.4,opacity:0,duration:1,ease:"back.out(2)",scrollTrigger:{trigger:".zomato",start:"top 90%"}});
+  gsap.from(".cg-card",{y:70,opacity:0,duration:1,stagger:.08,ease:"power3.out",scrollTrigger:{trigger:".cg-grid",start:"top 85%"}});
+  gsap.fromTo("#hallImg",{yPercent:-8},{yPercent:8,ease:"none",scrollTrigger:{trigger:".hall",start:"top bottom",end:"bottom top",scrub:true}});
+  gsap.utils.toArray("h2").forEach(h=>gsap.from(h,{y:60,opacity:0,duration:1,ease:"power3.out",scrollTrigger:{trigger:h,start:"top 88%"}}));
+  addEventListener("load",()=>ScrollTrigger.refresh());
+}
+intro();
+
+/* hero phone tilt with mouse */
+if(fine&&window.gsap){const ph=document.querySelector("#heroPhone .phone");const qy=gsap.quickTo(ph,"rotateY",{duration:.8,ease:"power2.out"}),qx=gsap.quickTo(ph,"rotateX",{duration:.8,ease:"power2.out"}),qr=gsap.quickTo(ph,"rotate",{duration:.8,ease:"power2.out"});let heroOn=true;new IntersectionObserver(es=>heroOn=es[0].isIntersecting).observe(document.querySelector(".hero"));addEventListener("mousemove",e=>{if(!heroOn)return;const x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;qy(x*16);qx(-y*12);qr(7+x*3)},{passive:true})}
+
+/* magnetic buttons */
+if(fine&&window.gsap)document.querySelectorAll(".mag").forEach(b=>{const mx=gsap.quickTo(b,"x",{duration:.4,ease:"power3.out"}),my=gsap.quickTo(b,"y",{duration:.4,ease:"power3.out"});b.addEventListener("mousemove",e=>{const r=b.getBoundingClientRect();mx((e.clientX-r.left-r.width/2)*.25);my((e.clientY-r.top-r.height/2)*.35)});b.addEventListener("mouseleave",()=>gsap.to(b,{x:0,y:0,duration:.6,ease:"elastic.out(1,.4)"}))});
+
+/* ---------- food cursor with crumb trail ---------- */
+if(fine){
+  document.body.classList.add("cursor-on");
+  const cur=$("cur"),lab=$("curlabel"),cc=$("crumbs"),g=cc.getContext("2d");
+  const size=()=>{cc.width=innerWidth;cc.height=innerHeight};size();addEventListener("resize",size);
+  let mx=innerWidth/2,my=innerHeight/2,x=mx,y=my,px=mx,py=my,rot=0,acc=0;const P=[];
+  const COLS={bread:["#C9843A","#8a5420","#E9B06A","#d9b27a"],samosa:["#D9A043","#7a4a1a","#E8C27A","#3f7a2a"],cake:["#5a2e1a","#F7E6CF","#D7261C","#3a1d10"]};
+  let running=false,dirty=false;const wake=()=>{if(!running){running=true;requestAnimationFrame(loop)}};
+  addEventListener("mousemove",e=>{mx=e.clientX;my=e.clientY;wake()},{passive:true});
+  addEventListener("mousedown",()=>cur.classList.add("down"));addEventListener("mouseup",()=>cur.classList.remove("down"));
+  document.addEventListener("mouseover",e=>{const t=e.target.closest("a,button,[data-cur],.chip,.tab,input,textarea");
+    if(t&&!t.matches("input,textarea")){cur.classList.add("hover");lab.textContent=t.dataset.cur||(t.matches(".chip,.tab")?"Pick":"Taste")}else cur.classList.remove("hover");
+    cur.style.opacity=t&&t.matches("input,textarea")?0:1;
+    const s=e.target.closest("[data-zone]");if(s&&s.dataset.zone!==cur.dataset.k)cur.dataset.k=s.dataset.zone});
+  document.addEventListener("mouseleave",()=>cur.style.opacity=0);document.addEventListener("mouseenter",()=>cur.style.opacity=1);
+  function loop(){
+    x+=(mx-x)*.22;y+=(my-y)*.22;const vx=x-px,vy=y-py;px=x;py=y;
+    rot+=((Math.max(-35,Math.min(35,vx*2.2)))-rot)*.15;
+    cur.style.transform=`translate(${x}px,${y}px) rotate(${rot}deg)`;
+    acc+=Math.hypot(vx,vy);
+    if(!reduce&&acc>14){acc=0;const pal=COLS[cur.dataset.k]||COLS.bread;for(let i=0;i<2;i++)P.push({x:x+(Math.random()-.5)*14,y:y+10+(Math.random()-.5)*8,vx:(Math.random()-.5)*1.4-vx*.04,vy:Math.random()*-1.2,r:1.4+Math.random()*2.6,a:1,c:pal[(Math.random()*pal.length)|0],rot:Math.random()*6,sides:Math.random()<.5?5:6})}
+    if(dirty||P.length){g.clearRect(0,0,innerWidth,innerHeight);dirty=P.length>0}
+    for(let i=P.length-1;i>=0;i--){const p=P[i];p.vy+=.12;p.x+=p.vx;p.y+=p.vy;p.a-=.018;p.rot+=.08;if(p.a<=0){P.splice(i,1);continue}
+      g.globalAlpha=p.a;g.fillStyle=p.c;g.beginPath();for(let k=0;k<p.sides;k++){const an=p.rot+k/p.sides*Math.PI*2,rr=p.r*(.75+((k*37)%10)/25);g[k?"lineTo":"moveTo"](p.x+Math.cos(an)*rr,p.y+Math.sin(an)*rr)}g.closePath();g.fill()}
+    g.globalAlpha=1;
+    if(P.length||Math.abs(mx-x)>.3||Math.abs(my-y)>.3||Math.abs(rot)>.3)requestAnimationFrame(loop);else running=false}
+  wake();
+}
+
+/* videos pause off-screen */
+/* ---------- hero reel: always autoplay ---------- */
+const hv=document.querySelector("#heroPhone video"),rc=$("reelCv"),rx=rc.getContext("2d");
+hv.muted=true;hv.defaultMuted=true;hv.setAttribute("muted","");hv.playsInline=true;hv.setAttribute("playsinline","");hv.loop=true;
+let reelFallback=false,reelVisible=true,reelFrames=[],reelI=0,reelLast=0;
+const RN=146,RFPS=10;
+function reelDraw(){const im=reelFrames[reelI];if(!im||!im.complete||!im.naturalWidth)return;const r=Math.min(devicePixelRatio||1,2);if(rc.width!==rc.clientWidth*r){rc.width=rc.clientWidth*r;rc.height=rc.clientHeight*r}
+  const s=Math.max(rc.width/im.naturalWidth,rc.height/im.naturalHeight),w=im.naturalWidth*s,h=im.naturalHeight*s;rx.drawImage(im,(rc.width-w)/2,(rc.height-h)/2,w,h)}
+function reelLoop(t){if(!reelFallback)return;if(reelVisible&&t-reelLast>1000/RFPS){reelLast=t;let n=(reelI+1)%RN,g=0;while(!(reelFrames[n]&&reelFrames[n].complete)&&g++<RN)n=(n+1)%RN;reelI=n;reelDraw()}requestAnimationFrame(reelLoop)}
+function startReelFallback(){if(reelFallback)return;reelFallback=true;
+  if(!reelFrames.length)for(let i=1;i<=RN;i++){const im=new Image();im.src="reel/r"+String(i).padStart(3,"0")+".jpg";if(i===1)im.onload=reelDraw;reelFrames.push(im)}
+  rc.hidden=false;hv.style.visibility="hidden";requestAnimationFrame(reelLoop)}
+function stopReelFallback(){reelFallback=false;rc.hidden=true;hv.style.visibility=""}
+function playReel(){return hv.play().then(()=>{if(reelFallback)stopReelFallback();return true}).catch(()=>false)}
+async function ensureReel(){if(!reelVisible)return;const ok=await playReel();setTimeout(()=>{if(reelVisible&&(hv.paused||hv.readyState<2))startReelFallback()},ok?1500:300)}
+ensureReel();
+addEventListener("load",ensureReel);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")ensureReel()});
+["pointerdown","keydown","touchstart"].forEach(ev=>addEventListener(ev,()=>{if(reelFallback||hv.paused)playReel()},{passive:true}));
+const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(v===hv){reelVisible=e.isIntersecting;if(reelVisible)ensureReel();else hv.pause();return}
+  v.muted=true;e.isIntersecting?v.play().catch(()=>{}):v.pause()}),{threshold:.15});
+document.querySelectorAll("video").forEach(v=>io.observe(v));
+
+/* ---------- cake builder ---------- */
+const O={flavour:["Dutch Truffle","Swiss Truffle","Classic Belgian Chocolate","Black Forest","White Forest","Chocolate Chips","Triple Chocolate","Hazelnut Caramel Torte","Rasmalai Thandai Gateaux","Blueberry Torte","Butterscotch","Pineapple","Florida","Red Velvet","Oreo Cheesecake","Biscoff Baked Cheesecake"],
+  occasion:["Birthday","Anniversary","Wedding","Just because"],style:["Classic cream","Floral","Chocolate drip","Photo print","Character","Tiered"],size:["½ kg","1 kg","1.5 kg","2 kg","3 kg+"]};
+const S={flavour:"",occasion:"Birthday",style:"Classic cream",size:"1 kg"};let cur=0;
+function chips(k){const el=document.querySelector(`[data-k="${k}"].chips`);el.setAttribute("role","radiogroup");el.setAttribute("aria-label",k);
+  el.innerHTML=O[k].map(v=>`<button type="button" class="chip" role="radio" data-v="${v}" aria-checked="${S[k]===v}">${v}</button>`).join("");
+  el.onclick=e=>{const b=e.target.closest("[data-v]");if(!b)return;S[k]=b.dataset.v;chips(k);sum();$("err").hidden=true}}
+Object.keys(O).forEach(chips);
+/* cake names: fill these with the cafe's exact names, in the same order as the photos */
+const CAKE_NAMES=["","","","","","","",""];
+document.querySelectorAll(".cg-card").forEach(c=>{const n=CAKE_NAMES[+c.dataset.i]||"";if(n){c.querySelector(".cname").textContent=n;c.querySelector("img").alt=n+" cake at Cafe Symphony"}c.setAttribute("aria-label",n?`Order a ${n} cake`:"Design a cake like this one");
+  const go=()=>{if(n&&O.flavour.includes(n)){S.flavour=n;chips("flavour");sum()}$("err").hidden=true;document.querySelector('.tab[data-g="0"]').click();const b=$("builder"),y=Math.max(0,b.getBoundingClientRect().top+scrollY-90);if(window.__lenis)window.__lenis.scrollTo(y,{force:true});setTimeout(()=>{if(Math.abs(b.getBoundingClientRect().top-90)>40)window.scrollTo({top:y,behavior:"smooth"})},700)};c.onclick=go;c.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}}});
+$("date").min=new Date(Date.now()+864e5).toISOString().slice(0,10);
+["msg","date","name","phone"].forEach(i=>$(i).addEventListener("input",sum));
+function sum(){const p=[S.flavour&&`${S.flavour} (eggless)`,S.size,S.occasion,S.style,$("msg").value&&`“${$("msg").value}”`,$("date").value].filter(Boolean);$("sum").textContent=p.join(" · ")+" · Price confirmed by the cafe"}
+function fail(m,f){$("err").textContent=m;$("err").hidden=false;document.querySelectorAll(".field.bad").forEach(x=>x.classList.remove("bad"));(f||[]).forEach(id=>$(id).classList.add("bad"))}
+function ok(i){if(i===0){if(!S.flavour)return fail("Pick a flavour to continue."),false}
+  if(i===3){const b=[],m=[];if(!$("date").value||$("date").value<$("date").min){b.push("f-date");m.push("Choose a date at least a day away.")}
+    if(!$("name").value.trim()){b.push("f-name");m.push("Add your name.")}
+    if(!/^[6-9]\d{9}$/.test($("phone").value.replace(/[\s-]/g,"").replace(/^(\+91|91|0)/,""))){b.push("f-phone");m.push("Enter a 10-digit mobile number.")}
+    if(b.length){fail(m.join(" "),b);$(b[0]).querySelector("input").focus();return false}}
+  $("err").hidden=true;return true}
+function go(i){cur=i;document.querySelectorAll(".pane").forEach(p=>p.classList.toggle("on",+p.dataset.p===i));
+  document.querySelectorAll(".tab").forEach((t,k)=>{t.removeAttribute("aria-current");if(k===i)t.setAttribute("aria-current","step")});
+  $("back").style.visibility=i?"visible":"hidden";$("next").innerHTML=i===3?'Prepare my order <span class="ar">→</span>':'Next <span class="ar">→</span>';$("err").hidden=true}
+$("tabs").onclick=e=>{const b=e.target.closest("[data-g]");if(!b)return;const t=+b.dataset.g;for(let k=cur;k<t;k++)if(!ok(k)){go(k);return}go(t)};
+$("back").onclick=()=>go(Math.max(0,cur-1));
+$("next").onclick=()=>{if(!ok(cur))return;if(cur<3)return go(cur+1);
+  $("out").textContent=[`Hi Cafe Symphony! I'd like to order a custom cake.`,``,`Flavour: ${S.flavour} (eggless)`,`Occasion: ${S.occasion}`,`Style: ${S.style}`,`Size: ${S.size}`,`Message on cake: ${$("msg").value||"None"}`,`Ideas: ${$("notes").value||"None"}`,`Reference photo: ${refFile?"Yes, attaching it in this chat":"None"}`,`Date: ${$("date").value}`,``,`Name: ${$("name").value}`,`Mobile: ${$("phone").value}`].join("\n");
+  document.querySelectorAll(".pane,#tabs,#navrow,#sum").forEach(e=>e.hidden=true);$("done").hidden=false;$("refnote").hidden=!refFile;
+  $("wa").href="https://wa.me/"+ORDER_WA+"?text="+encodeURIComponent($("out").textContent)};
+const ORDER_WA="917821013410";
+let refFile=null;
+$("ref").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(!/^image\//.test(f.type)){fail("Please choose an image file.");return}if(f.size>15e6){fail("That photo is over 15 MB. Try a smaller one.");return}
+  refFile=f;$("refimg").src=URL.createObjectURL(f);$("refname").textContent=f.name;$("refprev").hidden=false;$("drop").hidden=true;$("err").hidden=true});
+$("refrm").onclick=()=>{refFile=null;$("ref").value="";$("refprev").hidden=true;$("drop").hidden=false};
+
+$("copy").onclick=async()=>{try{await navigator.clipboard.writeText($("out").textContent);$("copy").textContent="Copied ✓"}catch(e){const r=document.createRange();r.selectNodeContents($("out"));getSelection().removeAllRanges();getSelection().addRange(r);$("copy").textContent="Selected"}};
+$("again").onclick=()=>{document.querySelectorAll(".pane,#tabs,#navrow,#sum").forEach(e=>e.hidden=false);$("done").hidden=true;$("copy").textContent="Copy message";go(0)};
+document.querySelectorAll("[data-c]").forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.writeText($(b.dataset.c).textContent);b.textContent="Copied";setTimeout(()=>b.textContent="Copy",1500)}catch(e){}});
+go(0);sum();
+</script>
+
+</body>
+</html>
