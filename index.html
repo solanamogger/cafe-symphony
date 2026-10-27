@@ -31,6 +31,7 @@ html{scroll-behavior:auto}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+@media (pointer:coarse){body::before{display:none}}
 body::before{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.55;background:url(img/grain.png);transform:translateZ(0)}
 main{overflow-x:clip}
 img,video,canvas,svg{display:block;max-width:100%}
@@ -44,7 +45,7 @@ button,input,textarea{font:inherit;color:inherit}
 .hand{font-family:var(--hand);font-weight:700;color:var(--muted);line-height:1.05}
 .eyebrow{font-size:.74rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase}
 .no{font-family:var(--serif);font-style:italic;font-weight:500;color:var(--red);font-size:clamp(2.2rem,4vw,3.2rem);line-height:1}
-.btn{position:relative;display:inline-flex;align-items:center;gap:12px;min-height:52px;padding:13px 26px;border-radius:12px;border:1.5px solid var(--red);background:var(--red);color:#fff;font-weight:700;text-decoration:none;cursor:pointer;will-change:transform}
+.btn{position:relative;display:inline-flex;align-items:center;gap:12px;min-height:52px;padding:13px 26px;border-radius:12px;border:1.5px solid var(--red);background:var(--red);color:#fff;font-weight:700;text-decoration:none;cursor:pointer}
 .btn .ar{transition:transform .3s}.btn:hover .ar{transform:translateX(5px)}
 .btn.line{background:transparent;color:var(--ink);border-color:var(--ink)}
 .btn.light{background:transparent;color:#fff;border-color:rgba(255,255,255,.75)}
@@ -303,7 +304,7 @@ nav.main a:hover::after{transform:scaleX(1);transform-origin:left}
 
 /* ---------- hall + visit ---------- */
 .hall{position:relative;min-height:90vh;display:grid;align-items:end;overflow:hidden;color:#fff}
-.hall video{position:absolute;inset:-12% 0;width:100%;height:124%;object-fit:cover;max-width:none;will-change:transform}
+.hall video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none}
 .hall::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(20,10,6,.85),rgba(20,10,6,.15) 60%)}
 .hall .wrap{position:relative;z-index:1;padding-block:80px;display:grid;gap:16px}
 .hall h2{font-size:clamp(3.4rem,8vw,7.6rem)}
@@ -591,7 +592,7 @@ function intro(){
 
 /* ---------- smooth scroll + scroll choreography ---------- */
 let lenis=null;
-if(window.Lenis&&!reduce){lenis=new Lenis({lerp:.09,smoothWheel:true});window.__lenis=lenis;
+if(window.Lenis&&!reduce&&fine){lenis=new Lenis({lerp:.1,smoothWheel:true});window.__lenis=lenis;
   document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener("click",e=>{const t=document.querySelector(a.getAttribute("href"));if(t){e.preventDefault();lenis.scrollTo(t,{offset:-10})}}));}
 if(window.gsap&&window.ScrollTrigger){
   gsap.registerPlugin(ScrollTrigger);
@@ -607,7 +608,7 @@ if(window.gsap&&window.ScrollTrigger){
   gsap.to(".sketch",{y:40,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:true}});
   /* breads: video plays by itself; steps follow the video, polaroids drop in once */
   const steps=[...document.querySelectorAll("#steps li")],pols=gsap.utils.toArray(".pol");
-  let lastK=-1;const setK=t=>{const k=t<1.1?0:t<2.6?1:t<3.2?2:3;if(k===lastK)return;lastK=k;steps.forEach((l,i)=>l.classList.toggle("on",i<=k))};
+  let lastK=-1;const setK=t=>{const k=t<1.4?0:t<3.8?1:t<5.1?2:3;if(k===lastK)return;lastK=k;steps.forEach((l,i)=>l.classList.toggle("on",i<=k))};
   bv.addEventListener("timeupdate",()=>setK(bv.currentTime));
   gsap.set(pols,{y:80,opacity:0,rotate:(i)=>[-14,12,-10,14][i]});
   gsap.to(pols,{y:0,opacity:1,rotate:(i)=>[-5,6,3,-7][i],stagger:.15,duration:.9,ease:"back.out(1.6)",scrollTrigger:{trigger:"#breadPin",start:"top 60%"}});
@@ -622,7 +623,6 @@ if(window.gsap&&window.ScrollTrigger){
   gsap.from(".builder,.zomato",{y:60,opacity:0,duration:1,stagger:.15,ease:"power3.out",scrollTrigger:{trigger:".right-col",start:"top 82%"}});
   gsap.from(".zomato svg.laurel",{scale:.4,opacity:0,duration:1,ease:"back.out(2)",scrollTrigger:{trigger:".zomato",start:"top 90%"}});
   gsap.from(".cg-card",{y:70,opacity:0,duration:1,stagger:.08,ease:"power3.out",scrollTrigger:{trigger:".cg-grid",start:"top 85%"}});
-  gsap.fromTo("#hallImg",{yPercent:-8},{yPercent:8,ease:"none",scrollTrigger:{trigger:".hall",start:"top bottom",end:"bottom top",scrub:true}});
   gsap.utils.toArray("h2").forEach(h=>gsap.from(h,{y:60,opacity:0,duration:1,ease:"power3.out",scrollTrigger:{trigger:h,start:"top 88%"}}));
   addEventListener("load",()=>ScrollTrigger.refresh());
 }
@@ -684,7 +684,8 @@ document.addEventListener("visibilitychange",()=>{if(document.visibilityState===
 ["pointerdown","keydown","touchstart"].forEach(ev=>addEventListener(ev,()=>{if(reelFallback||hv.paused)playReel()},{passive:true}));
 const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(v===hv){reelVisible=e.isIntersecting;if(reelVisible)ensureReel();else hv.pause();return}
   v.muted=true;e.isIntersecting?v.play().catch(()=>{}):v.pause()}),{threshold:.15});
-document.querySelectorAll("video").forEach(v=>io.observe(v));
+document.querySelectorAll("video").forEach(v=>{if(v.id!=="seq")io.observe(v)});
+const keepBread=()=>{if(bv.paused)bv.play().catch(()=>{})};keepBread();["loadeddata","canplay","pause"].forEach(ev=>bv.addEventListener(ev,()=>setTimeout(keepBread,50)));document.addEventListener("visibilitychange",()=>{if(!document.hidden)keepBread()});["pointerdown","touchstart","scroll"].forEach(ev=>addEventListener(ev,keepBread,{passive:true,once:true}));
 
 /* ---------- cake builder ---------- */
 const O={flavour:["Dutch Truffle","Swiss Truffle","Classic Belgian Chocolate","Black Forest","White Forest","Chocolate Chips","Triple Chocolate","Hazelnut Torte","Hazelnut Caramel Torte","Rasmalai Thandai Gateaux","Blueberry Torte","Butterscotch","Pineapple","Florida","Red Velvet","Oreo Cheesecake","Biscoff Baked Cheesecake"],
