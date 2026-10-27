@@ -153,8 +153,8 @@ nav.main a:hover::after{transform:scaleX(1);transform-origin:left}
 /* ---------- breads ---------- */
 #breads{position:relative;padding-top:clamp(80px,10vw,130px)}
 .giant{position:absolute;left:0;top:clamp(120px,14vw,190px);white-space:nowrap;font-family:var(--disp);font-size:clamp(9rem,24vw,22rem);line-height:.8;color:transparent;-webkit-text-stroke:2px var(--red);opacity:.55;pointer-events:none;z-index:0;will-change:transform}
-.bread-pin{position:relative;height:440vh}
-.bread-stage{position:sticky;top:0;height:100vh;height:100svh;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.05fr);gap:clamp(20px,3.5vw,56px);align-items:center;padding-top:70px;z-index:1}
+.bread-pin{position:relative}
+.bread-stage{position:relative;min-height:100vh;min-height:100svh;padding-block:90px 60px;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.05fr);gap:clamp(20px,3.5vw,56px);align-items:center;padding-top:70px;z-index:1}
 .bread-copy h2{font-size:clamp(3.4rem,7vw,6.6rem);margin-top:8px}
 .bread-copy .serif-i{display:block;font-size:clamp(1.5rem,2.4vw,2rem);line-height:1.15;margin-top:12px}
 .bread-copy p.c{color:var(--muted);max-width:40ch;margin-top:16px}
@@ -178,7 +178,6 @@ nav.main a:hover::after{transform:scaleX(1);transform-origin:left}
 .philo span{display:flex;gap:8px;align-items:center}
 .philo span::before{content:"✓";width:22px;height:22px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font-size:.7rem}
 @media (max-width:1000px){
-  .bread-pin{height:400vh}
   .bread-stage{grid-template-columns:1fr;align-content:center;justify-items:center;text-align:center;gap:12px;padding-top:72px;padding-bottom:16px}
   .bread-copy{display:grid;justify-items:center}
   .bread-copy h2{font-size:clamp(2.4rem,8vw,3.6rem);margin-top:2px}
@@ -409,7 +408,7 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:1
         </ol>
         <div class="philo"><span>Baked daily</span><span>Made in-house</span><span>Real ingredients</span></div>
       </div>
-      <div class="phone-wrap"><div class="phone"><div class="scr"><span class="notch"></span><canvas id="seq" aria-label="Cafe Symphony's multigrain bread being made, from mixing to baked loaves"></canvas>
+      <div class="phone-wrap"><div class="phone"><div class="scr"><span class="notch"></span><video id="seq" poster="vid/bread.jpg" muted loop playsinline autoplay preload="auto" disablepictureinpicture aria-label="Cafe Symphony's multigrain bread being made, from mixing to baked loaves"><source src="vid/bread.mp4" type="video/mp4"><source src="vid/bread.webm" type="video/webm"></video>
         <div class="ig"><span class="u"><i></i>cafe.symphony_csn</span><span>Fresh Multigrain Bread</span></div></div></div></div>
       <div class="pol-stack">
         <figure class="pol p1" data-i="0"><img src="loaf/s005.jpg" alt="Grains and dough in the mixer"><figcaption>Mixed in-house</figcaption></figure>
@@ -539,20 +538,10 @@ const fine=matchMedia("(pointer: fine)").matches;
 const T=["Freshly baked","Multigrain bread","Multigrain khari","Bun maska chai","Ladi pav","Cakes made like magic","Good food, good mood"];
 $("tick").innerHTML=[...T,...T,...T].map(t=>`<span>${t}</span>`).join("");
 
-/* ---------- bread frame sequence ---------- */
-const N=176,frames=new Array(N),cv=$("seq"),cx=cv.getContext("2d");const st={f:0};let loaded=0;
-const KEY=[];for(let i=0;i<N;i+=4)KEY.push(i);if(KEY[KEY.length-1]!==N-1)KEY.push(N-1);const NK=KEY.length;let keyLoaded=0;
-const fok=i=>{const im=frames[i];return im&&im.complete&&im.naturalWidth>0};
-function near(i){if(fok(i))return i;for(let d=1;d<N;d++){if(i-d>=0&&fok(i-d))return i-d;if(i+d<N&&fok(i+d))return i+d}return -1}
-function fit(){const r=Math.min(devicePixelRatio||1,1.5);const w=Math.max(1,Math.round(cv.clientWidth*r)),h=Math.max(1,Math.round(cv.clientHeight*r));if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}draw(true)}
-let lastKey="";
-function paint(im,a){const s=Math.max(cv.width/im.naturalWidth,cv.height/im.naturalHeight),w=im.naturalWidth*s,h=im.naturalHeight*s;cx.globalAlpha=a;cx.drawImage(im,(cv.width-w)/2,(cv.height-h)/2,w,h);cx.globalAlpha=1}
-function draw(force){const f=Math.max(0,Math.min(N-1,st.f)),i0=Math.floor(f),fr=f-i0;const a=near(i0);if(a<0)return;
-  const b=(fr>.04&&i0+1<N&&fok(i0+1)&&a===i0)?i0+1:-1;const key=a+"|"+(b<0?0:Math.round(fr*12));if(key===lastKey&&force!==true)return;lastKey=key;
-  paint(frames[a],1);if(b>=0)paint(frames[b],Math.round(fr*12)/12)}
-const load=(i,cb)=>{const im=new Image();im.decoding="async";im.onload=im.onerror=()=>{loaded++;cb&&cb();if(i===0||Math.abs(i-Math.round(st.f))<3)draw(true)};im.src="loaf/s"+String(i+1).padStart(3,"0")+".jpg";frames[i]=im};
-KEY.forEach(i=>load(i,()=>{keyLoaded++;if(keyLoaded===1)fit();if(keyLoaded===NK){for(let i=0;i<N;i++)if(!frames[i])load(i)}}));
-addEventListener("resize",fit);
+/* ---------- bread video (plays on its own, no scroll scrubbing) ---------- */
+const bv=$("seq");bv.muted=true;bv.playsInline=true;
+let bvReady=bv.readyState>=3;["canplaythrough","canplay","loadeddata","error"].forEach(ev=>bv.addEventListener(ev,()=>bvReady=true,{once:true}));setTimeout(()=>bvReady=true,4000);
+
 
 /* ---------- loader ---------- */
 const MSG=[[0,"preheating the oven…"],[.3,"dough is rising…"],[.6,"crust going golden…"],[.9,"garam garam, almost ready!"]];
@@ -573,7 +562,7 @@ function intro(){
   const L=$("loader"),pct=$("pct");
   const vid=document.querySelector("#heroPhone video");
   let vidReady=false;if(vid){if(vid.readyState>=2)vidReady=true;else{["loadeddata","canplay","error"].forEach(ev=>vid.addEventListener(ev,()=>vidReady=true,{once:true}));setTimeout(()=>vidReady=true,3000)}}else vidReady=true;
-  const real=()=>(keyLoaded/NK)*.8+(vidReady?.2:0);           /* real loading progress, 0..1 */
+  const real=()=>(bvReady?.6:0)+(vidReady?.4:0);           /* real loading progress, 0..1 */
   const start=performance.now(),MIN=2200,MAX=7000;let shown=0;
   const finish=()=>{
     pct.textContent="220";bake(1);
@@ -616,13 +605,12 @@ if(window.gsap&&window.ScrollTrigger){
   /* hero phone parallax */
   gsap.to("#heroPhone",{y:-80,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:true}});
   gsap.to(".sketch",{y:40,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:true}});
-  /* breads: pinned stage at every width, scrub the real reel, light up steps, drop polaroids */
+  /* breads: video plays by itself; steps follow the video, polaroids drop in once */
   const steps=[...document.querySelectorAll("#steps li")],pols=gsap.utils.toArray(".pol");
-  const setK=p=>{const f=p*(N-1);const k=f<27?0:f<64?1:f<84?2:3;steps.forEach((l,i)=>l.classList.toggle("on",i<=k))};
+  let lastK=-1;const setK=t=>{const k=t<1.1?0:t<2.6?1:t<3.2?2:3;if(k===lastK)return;lastK=k;steps.forEach((l,i)=>l.classList.toggle("on",i<=k))};
+  bv.addEventListener("timeupdate",()=>setK(bv.currentTime));
   gsap.set(pols,{y:80,opacity:0,rotate:(i)=>[-14,12,-10,14][i]});
-  gsap.timeline({scrollTrigger:{trigger:"#breadPin",start:"top top",end:"bottom bottom",scrub:.8,onUpdate:s=>setK(s.progress),onRefresh:()=>{fit()}}})
-    .to(st,{f:N-1,ease:"none",duration:1,onUpdate:draw},0)
-    .to(pols,{y:0,opacity:1,rotate:(i)=>[-5,6,3,-7][i],stagger:.18,duration:.25,ease:"back.out(1.6)"},.05);
+  gsap.to(pols,{y:0,opacity:1,rotate:(i)=>[-5,6,3,-7][i],stagger:.15,duration:.9,ease:"back.out(1.6)",scrollTrigger:{trigger:"#breadPin",start:"top 60%"}});
   gsap.fromTo("#giant",{xPercent:5},{xPercent:-45,ease:"none",scrollTrigger:{trigger:"#breads",start:"top bottom",end:"bottom top",scrub:true}});
   /* bread shelf: horizontal pinned polaroids at every width */
   const tr=$("savTrack");const dist=()=>Math.max(0,tr.scrollWidth-innerWidth+40);
