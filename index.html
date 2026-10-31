@@ -160,22 +160,25 @@ nav.main a:hover::after{transform:scaleX(1);transform-origin:left}
 .bread-copy .serif-i{display:block;font-size:clamp(1.5rem,2.4vw,2rem);line-height:1.15;margin-top:12px}
 .bread-copy p.c{color:var(--muted);max-width:40ch;margin-top:16px}
 .steps{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:12px}
-.steps li{display:flex;gap:14px;align-items:center;font-family:var(--serif);font-size:1.12rem;color:#a08b79;transition:color .3s}
-.steps li b{width:34px;height:34px;border-radius:50%;border:1.5px solid currentColor;display:grid;place-items:center;font-family:var(--body);font-size:.85rem;flex:none;transition:background .3s,color .3s,border-color .3s}
+.steps li{display:flex;gap:14px;align-items:flex-start;font-family:var(--serif);font-size:1.12rem;color:#a08b79;transition:color .3s}
+.steps li b{margin-top:-4px;width:34px;height:34px;border-radius:50%;border:1.5px solid currentColor;display:grid;place-items:center;font-family:var(--body);font-size:.85rem;flex:none;transition:background .3s,color .3s,border-color .3s}
 .steps li{padding:9px 14px 9px 10px;margin-left:-10px;border-radius:16px;transition:background .4s,color .4s,box-shadow .4s,transform .4s}
-.steps li .t{display:grid;gap:7px;flex:1;min-width:0}
-.steps li .pb{display:block;height:3px;border-radius:3px;background:rgba(198,36,27,.14);overflow:hidden;opacity:0;transition:opacity .3s}
-.steps li .pb i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--orange-2),var(--red));transform:scaleX(0);transform-origin:0 50%}
+.steps li .t{display:grid;gap:0;flex:1;min-width:0}
+.steps li .dd{display:grid;grid-template-rows:0fr;opacity:0;transform:translateY(-6px);transition:grid-template-rows .55s cubic-bezier(.2,.8,.2,1),opacity .4s,transform .55s cubic-bezier(.2,.8,.2,1)}
+.steps li .dd>p{overflow:hidden;min-height:0;margin:0;font-family:var(--body);font-weight:400;font-size:.9rem;line-height:1.45;color:var(--muted)}
+.steps li.now .dd{grid-template-rows:1fr;opacity:1;transform:none}
+.steps li.now .dd>p{padding-top:4px}
+.steps li.drop{animation:stepDrop .6s cubic-bezier(.2,1.3,.4,1)}
+@keyframes stepDrop{0%{transform:translate(8px,-14px) scale(.97)}100%{transform:translateX(8px)}}
+.steps li.done b{animation:tickPop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes stepDropM{0%{transform:translateY(-12px) scale(.97)}100%{transform:none}}
+@keyframes tickPop{0%{transform:scale(.6)}100%{transform:scale(1)}}
 .steps li.done{color:var(--ink)}
 .steps li.done b{position:relative;background:var(--red);border-color:var(--red);color:transparent}
 .steps li.done b::after{content:"";position:absolute;left:50%;top:46%;width:7px;height:13px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:translate(-50%,-50%) rotate(45deg)}
 .steps li.now{background:#fff;color:var(--ink);font-weight:600;transform:translateX(8px);box-shadow:0 14px 30px -20px rgba(90,40,10,.7),inset 0 0 0 1.5px rgba(198,36,27,.22)}
 .steps li.now b{background:var(--orange);border-color:var(--orange);color:#fff;animation:stepPulse 1.3s ease-out infinite}
-.steps li.now .pb{opacity:1}
 @keyframes stepPulse{0%{box-shadow:0 0 0 0 rgba(224,122,60,.6)}100%{box-shadow:0 0 0 12px rgba(224,122,60,0)}}
-.sbars{position:absolute;top:34px;left:14px;right:14px;z-index:3;display:flex;gap:4px;pointer-events:none}
-.sbars i{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.35);overflow:hidden}
-.sbars b{display:block;height:100%;background:#fff;transform:scaleX(0);transform-origin:0 50%}
 .stepcap{display:flex;gap:8px;align-items:center;font-size:.86rem;font-weight:600}
 .stepcap b{background:var(--orange);color:#fff;border-radius:999px;padding:2px 9px;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;flex:none}
 @media (prefers-reduced-motion:reduce){.steps li.now b{animation:none}}
@@ -202,6 +205,8 @@ nav.main a:hover::after{transform:scaleX(1);transform-origin:left}
   .steps{margin-top:10px;gap:6px;text-align:left}
   .steps li{font-size:.98rem;padding:6px 10px 6px 8px;margin-left:0}
   .steps li.now{transform:none}
+  .steps li.drop{animation-name:stepDropM}
+  .steps li .dd>p{font-size:.84rem}
   .steps li b{width:28px;height:28px}
   .bread-stage .phone-wrap{width:auto;min-width:0;height:min(48vh,430px);aspect-ratio:9/19}
   .bread-stage .phone{height:100%;padding:8px;border-radius:36px}
@@ -418,14 +423,14 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:1
         <span class="serif-i">Real ingredients.<br>Real flavour.</span>
         <p class="c">Freshly baked, freshly served. Our multigrain bread is mixed, shaped, rolled in oats and baked in-house every single day.</p>
         <ol class="steps" id="steps">
-          <li class="now"><b>1</b><span class="t">Real grains, real dough<em class="pb"><i></i></em></span></li>
-          <li><b>2</b><span class="t">Rolled in oats by hand<em class="pb"><i></i></em></span></li>
-          <li><b>3</b><span class="t">Rested in the tins<em class="pb"><i></i></em></span></li>
-          <li><b>4</b><span class="t">Out of the oven, every morning<em class="pb"><i></i></em></span></li>
+          <li class="now"><b>1</b><div class="t"><span class="lbl3">Real grains, real dough</span><div class="dd"><p>Multigrain flour, oats and seeds mixed into fresh dough in our kitchen.</p></div></div></li>
+          <li><b>2</b><div class="t"><span class="lbl3">Rolled in oats by hand</span><div class="dd"><p>Every loaf is shaped and rolled in oats and seeds by hand.</p></div></div></li>
+          <li><b>3</b><div class="t"><span class="lbl3">Rested in the tins</span><div class="dd"><p>The loaves rest in their tins and rise slowly before baking.</p></div></div></li>
+          <li><b>4</b><div class="t"><span class="lbl3">Out of the oven, every morning</span><div class="dd"><p>Baked golden and pulled out fresh, every single morning.</p></div></div></li>
         </ol>
         <div class="philo"><span>Baked daily</span><span>Made in-house</span><span>Real ingredients</span></div>
       </div>
-      <div class="phone-wrap"><div class="phone"><div class="scr"><span class="notch"></span><div class="sbars" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div><video id="seq" poster="vid/bread.jpg" muted loop playsinline autoplay preload="auto" disablepictureinpicture aria-label="Cafe Symphony's multigrain bread being made, from mixing to baked loaves"><source src="vid/bread.mp4" type="video/mp4"><source src="vid/bread.webm" type="video/webm"></video>
+      <div class="phone-wrap"><div class="phone"><div class="scr"><span class="notch"></span><video id="seq" poster="vid/bread.jpg" muted loop playsinline autoplay preload="auto" disablepictureinpicture aria-label="Cafe Symphony's multigrain bread being made, from mixing to baked loaves"><source src="vid/bread.mp4" type="video/mp4"><source src="vid/bread.webm" type="video/webm"></video>
         <div class="ig"><span class="u"><i></i>cafe.symphony_csn</span><span id="stepcap" class="stepcap"><b>Step 1</b> Real grains, real dough</span></div></div></div></div>
       <div class="pol-stack">
         <figure class="pol p1" data-i="0"><img src="loaf/s005.jpg" alt="Grains and dough in the mixer"><figcaption>Mixed in-house</figcaption></figure>
@@ -624,13 +629,12 @@ if(window.gsap&&window.ScrollTrigger){
   gsap.to(".sketch",{y:40,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:true}});
   /* breads: video plays by itself; steps follow the video, polaroids drop in once */
   const steps=[...document.querySelectorAll("#steps li")],pols=gsap.utils.toArray(".pol");
-  /* step tracker: highlights which step the video is showing, ticks off finished ones */
-  const SEG=[0,1.4,3.8,5.1],LBL=steps.map(l=>l.querySelector(".t").firstChild.textContent.trim()),pbs=steps.map(l=>l.querySelector(".pb i")),sb=[...document.querySelectorAll(".sbars b")],cap=$("stepcap");
+  /* step tracker: the current step drops open with a short line, finished steps fold shut with a tick */
+  const SEG=[0,1.4,3.8,5.1],LBL=steps.map(l=>l.querySelector(".lbl3").textContent.trim()),cap=$("stepcap");
   let lastK=-1,trackOn=true;
-  const track=()=>{if(trackOn){const d=bv.duration||12.54,t=bv.currentTime||0,ends=[...SEG.slice(1),d];let k=0;while(k<3&&t>=SEG[k+1])k++;
-      const p=Math.min(1,Math.max(0,(t-SEG[k])/(ends[k]-SEG[k])));
-      if(k!==lastK){lastK=k;steps.forEach((l,i)=>{l.classList.toggle("done",i<k);l.classList.toggle("now",i===k)});cap.innerHTML=`<b>Step ${k+1}</b> ${LBL[k]}`;pbs.forEach((b,i)=>{if(i!==k)b.style.transform=`scaleX(${i<k?1:0})`});sb.forEach((b,i)=>{if(i!==k)b.style.transform=`scaleX(${i<k?1:0})`})}
-      pbs[k].style.transform=`scaleX(${p.toFixed(3)})`;sb[k].style.transform=`scaleX(${p.toFixed(3)})`}
+  const track=()=>{if(trackOn){const t=bv.currentTime||0;let k=0;while(k<3&&t>=SEG[k+1])k++;
+      if(k!==lastK){lastK=k;steps.forEach((l,i)=>{l.classList.toggle("done",i<k);l.classList.toggle("now",i===k);l.classList.remove("drop")});
+        const cur=steps[k];void cur.offsetWidth;cur.classList.add("drop");cap.innerHTML=`<b>Step ${k+1}</b> ${LBL[k]}`}}
     requestAnimationFrame(track)};
   new IntersectionObserver(es=>{trackOn=es[0].isIntersecting},{rootMargin:"100px"}).observe($("breadPin"));
   requestAnimationFrame(track);
