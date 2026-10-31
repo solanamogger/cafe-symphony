@@ -179,6 +179,32 @@ nav.main a:hover::after{transform:scaleX(1);transform-origin:left}
 .steps li.now{background:#fff;color:var(--ink);font-weight:600;transform:translateX(8px);box-shadow:0 14px 30px -20px rgba(90,40,10,.7),inset 0 0 0 1.5px rgba(198,36,27,.22)}
 .steps li.now b{background:var(--orange);border-color:var(--orange);color:#fff;animation:stepPulse 1.3s ease-out infinite}
 @keyframes stepPulse{0%{box-shadow:0 0 0 0 rgba(224,122,60,.6)}100%{box-shadow:0 0 0 12px rgba(224,122,60,0)}}
+/* baking step numbers: dough -> rising -> golden crust, steam, flour burst */
+.steps li b{position:relative;isolation:isolate;overflow:visible}
+.steps li b .n{position:relative;z-index:2}
+.steps li.now b{background:radial-gradient(circle at 35% 30%,#fff6e3,#efdab2);border-color:#e0c08a;color:#7a4a1a;animation:doughRise 1.8s ease-in-out infinite}
+.steps li.now b::before{content:"";position:absolute;inset:-1.5px;border-radius:50%;z-index:1;background:radial-gradient(circle at 34% 28%,#f1b46c,#b7672a 62%,#7e3f15);box-shadow:inset 0 -3px 5px rgba(80,30,5,.35);opacity:0;animation:bakeIn var(--bake,2s) cubic-bezier(.5,0,.7,1) forwards}
+.steps li.now b .n{animation:bakeText var(--bake,2s) linear forwards}
+@keyframes doughRise{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@keyframes bakeIn{to{opacity:1}}
+@keyframes bakeText{0%,55%{color:#7a4a1a}100%{color:#fff}}
+.steps li b .st{position:absolute;left:50%;bottom:78%;width:5px;height:16px;border-radius:5px;background:linear-gradient(transparent,rgba(255,255,255,.95),transparent);filter:blur(1.5px);opacity:0;pointer-events:none;z-index:3}
+.steps li.now b .st{animation:steamUp 1.6s ease-out infinite}
+.steps li.now b .st:nth-child(3){margin-left:-8px;animation-delay:.5s}
+.steps li.now b .st:nth-child(4){margin-left:6px;animation-delay:1s}
+@keyframes steamUp{0%{transform:translate(-50%,6px) scaleX(1);opacity:0}30%{opacity:.85}100%{transform:translate(-50%,-22px) scaleX(2.2);opacity:0}}
+.steps li.done b{background:radial-gradient(circle at 34% 28%,#f1b46c,#b7672a 62%,#7e3f15);border-color:#8a4a1c;box-shadow:inset 0 -3px 5px rgba(80,30,5,.35),0 4px 10px -4px rgba(120,60,20,.6)}
+.steps li.done b .n{opacity:0}
+.steps li.done b::after{z-index:3}
+.burst{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;z-index:4}
+.burst i{position:absolute;left:0;top:0;display:block;border-radius:50%;will-change:transform,opacity}
+.burst .oat{width:11px;height:6px;border-radius:50%;background:#d9a75d;box-shadow:inset 0 -1.5px 0 rgba(110,60,15,.55),0 1px 2px rgba(80,40,10,.3)}
+.burst .flour{width:6px;height:6px;background:#fffdf7;box-shadow:0 0 0 1px rgba(180,130,70,.35),0 0 8px 3px rgba(255,248,230,.95)}
+.burst .crumb{width:6px;height:5px;border-radius:2px;background:#9c561f}
+.burst .seed{width:5px;height:3px;border-radius:50%;background:#3a2414}
+.burst .ring{width:34px;height:34px;margin:-17px 0 0 -17px;border:2.5px solid rgba(224,122,60,.85);box-shadow:0 0 16px rgba(240,170,90,.8)}
+@media (prefers-reduced-motion:reduce){.steps li.now b,.steps li.now b .st{animation:none}.steps li.now b::before{animation:none;opacity:1}}
+
 .stepcap{display:flex;gap:8px;align-items:center;font-size:.86rem;font-weight:600}
 .stepcap b{background:var(--orange);color:#fff;border-radius:999px;padding:2px 9px;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;flex:none}
 @media (prefers-reduced-motion:reduce){.steps li.now b{animation:none}}
@@ -632,9 +658,20 @@ if(window.gsap&&window.ScrollTrigger){
   /* step tracker: the current step drops open with a short line, finished steps fold shut with a tick */
   const SEG=[0,1.4,3.8,5.1],LBL=steps.map(l=>l.querySelector(".lbl3").textContent.trim()),cap=$("stepcap");
   let lastK=-1,trackOn=true;
-  const track=()=>{if(trackOn){const t=bv.currentTime||0;let k=0;while(k<3&&t>=SEG[k+1])k++;
-      if(k!==lastK){lastK=k;steps.forEach((l,i)=>{l.classList.toggle("done",i<k);l.classList.toggle("now",i===k);l.classList.remove("drop")});
-        const cur=steps[k];void cur.offsetWidth;cur.classList.add("drop");cap.innerHTML=`<b>Step ${k+1}</b> ${LBL[k]}`}}
+  steps.forEach((l,i)=>{const b=l.querySelector("b");b.innerHTML=`<span class="n">${i+1}</span><i class="st"></i><i class="st"></i><i class="st"></i>`});
+  const burst=b=>{if(reduce)return;const c=document.createElement("span");c.className="burst";b.appendChild(c);
+    const ring=document.createElement("i");ring.className="ring";c.appendChild(ring);ring.animate([{transform:"scale(.6)",opacity:1},{transform:"scale(2.4)",opacity:0}],{duration:650,easing:"cubic-bezier(.2,.7,.3,1)"});
+    const kinds=["oat","oat","flour","crumb","seed","oat","flour"];
+    for(let n=0;n<22;n++){const e=document.createElement("i");e.className=kinds[n%kinds.length];c.appendChild(e);
+      const a=(n/22)*Math.PI*2+Math.random()*.4,d=34+Math.random()*38,dx=Math.cos(a)*d,dy=Math.sin(a)*d-8,r=Math.random()*540-270;
+      e.animate([{transform:"translate(-50%,-50%) scale(.4) rotate(0deg)",opacity:1},{transform:`translate(calc(-50% + ${dx*.7}px),calc(-50% + ${dy*.7}px)) scale(1.1) rotate(${r*.6}deg)`,opacity:1,offset:.55},{transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy+14}px)) scale(.8) rotate(${r}deg)`,opacity:0}],{duration:850+Math.random()*350,easing:"cubic-bezier(.15,.7,.3,1)",fill:"forwards"})}
+    setTimeout(()=>c.remove(),1400)};
+  const track=()=>{if(trackOn){const d=bv.duration||12.54,t=bv.currentTime||0;let k=0;while(k<3&&t>=SEG[k+1])k++;
+      if(k!==lastK){const prev=lastK;lastK=k;
+        if(prev>=0&&(k===prev+1||(prev===3&&k===0)))burst(steps[prev].querySelector("b"));
+        const ends=[...SEG.slice(1),d];steps[k].style.setProperty("--bake",Math.min(3,Math.max(1,ends[k]-SEG[k]))+"s");
+        steps.forEach((l,i)=>{l.classList.toggle("done",i<k);l.classList.remove("now","drop")});
+        const cur=steps[k];void cur.offsetWidth;cur.classList.add("now","drop");cap.innerHTML=`<b>Step ${k+1}</b> ${LBL[k]}`}}
     requestAnimationFrame(track)};
   new IntersectionObserver(es=>{trackOn=es[0].isIntersecting},{rootMargin:"100px"}).observe($("breadPin"));
   requestAnimationFrame(track);
