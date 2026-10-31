@@ -168,42 +168,48 @@ nav.main a:hover::after{transform:scaleX(1);transform-origin:left}
 .steps li .dd>p{overflow:hidden;min-height:0;margin:0;font-family:var(--body);font-weight:400;font-size:.9rem;line-height:1.45;color:var(--muted)}
 .steps li.now .dd{grid-template-rows:1fr;opacity:1;transform:none}
 .steps li.now .dd>p{padding-top:4px}
-.steps li.drop{animation:stepDrop .6s cubic-bezier(.2,1.3,.4,1)}
-@keyframes stepDrop{0%{transform:translate(8px,-14px) scale(.97)}100%{transform:translateX(8px)}}
-.steps li.done b{animation:tickPop .45s cubic-bezier(.2,1.6,.4,1)}
-@keyframes stepDropM{0%{transform:translateY(-12px) scale(.97)}100%{transform:none}}
-@keyframes tickPop{0%{transform:scale(.6)}100%{transform:scale(1)}}
+.steps li.drop{animation:stepDrop .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes stepDrop{0%{transform:translate(8px,-6px);opacity:.6}100%{transform:translateX(8px);opacity:1}}
+@keyframes stepDropM{0%{transform:translateY(-6px);opacity:.6}100%{transform:none;opacity:1}}
+
 .steps li.done{color:var(--ink)}
-.steps li.done b{position:relative;background:var(--red);border-color:var(--red);color:transparent}
-.steps li.done b::after{content:"";position:absolute;left:50%;top:46%;width:7px;height:13px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:translate(-50%,-50%) rotate(45deg)}
+
 .steps li.now{background:#fff;color:var(--ink);font-weight:600;transform:translateX(8px);box-shadow:0 14px 30px -20px rgba(90,40,10,.7),inset 0 0 0 1.5px rgba(198,36,27,.22)}
-.steps li.now b{background:var(--orange);border-color:var(--orange);color:#fff;animation:stepPulse 1.3s ease-out infinite}
 @keyframes stepPulse{0%{box-shadow:0 0 0 0 rgba(224,122,60,.6)}100%{box-shadow:0 0 0 12px rgba(224,122,60,0)}}
-/* baking step numbers: dough -> rising -> golden crust, steam, flour burst */
-.steps li b{position:relative;isolation:isolate;overflow:visible}
-.steps li b .n{position:relative;z-index:2}
-.steps li.now b{background:radial-gradient(circle at 35% 30%,#fff6e3,#efdab2);border-color:#e0c08a;color:#7a4a1a;animation:doughRise 1.8s ease-in-out infinite}
-.steps li.now b::before{content:"";position:absolute;inset:-1.5px;border-radius:50%;z-index:1;background:radial-gradient(circle at 34% 28%,#f1b46c,#b7672a 62%,#7e3f15);box-shadow:inset 0 -3px 5px rgba(80,30,5,.35);opacity:0;animation:bakeIn var(--bake,2s) cubic-bezier(.5,0,.7,1) forwards}
-.steps li.now b .n{animation:bakeText var(--bake,2s) linear forwards}
-@keyframes doughRise{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-@keyframes bakeIn{to{opacity:1}}
-@keyframes bakeText{0%,55%{color:#7a4a1a}100%{color:#fff}}
-.steps li b .st{position:absolute;left:50%;bottom:78%;width:5px;height:16px;border-radius:5px;background:linear-gradient(transparent,rgba(255,255,255,.95),transparent);filter:blur(1.5px);opacity:0;pointer-events:none;z-index:3}
-.steps li.now b .st{animation:steamUp 1.6s ease-out infinite}
-.steps li.now b .st:nth-child(3){margin-left:-8px;animation-delay:.5s}
-.steps li.now b .st:nth-child(4){margin-left:6px;animation-delay:1s}
-@keyframes steamUp{0%{transform:translate(-50%,6px) scaleX(1);opacity:0}30%{opacity:.85}100%{transform:translate(-50%,-22px) scaleX(2.2);opacity:0}}
-.steps li.done b{background:radial-gradient(circle at 34% 28%,#f1b46c,#b7672a 62%,#7e3f15);border-color:#8a4a1c;box-shadow:inset 0 -3px 5px rgba(80,30,5,.35),0 4px 10px -4px rgba(120,60,20,.6)}
+/* step badges: oven-timer ring + crust rising inside; finished = baker's score mark */
+.steps li b{position:relative;isolation:isolate;border:0;background:none;overflow:visible}
+.steps li b .dial{position:absolute;inset:-3px;max-width:none;width:calc(100% + 6px);height:calc(100% + 6px);transform:rotate(-90deg);overflow:visible}
+.steps li b .dial circle{fill:none;stroke-width:1.6}
+.steps li b .trk{stroke:#cdb8a2}
+.steps li b .arc{stroke:#c9762f;stroke-linecap:round;stroke-dasharray:113.1;stroke-dashoffset:113.1}
+.steps li b .crumb{position:absolute;inset:3px;border-radius:50%;background:#f3e4c8;box-shadow:inset 0 1px 2px rgba(120,70,20,.15);opacity:0;transition:opacity .5s}
+.steps li b .crust{position:absolute;inset:3px;border-radius:50%;background:radial-gradient(120% 90% at 35% 25%,#f0bd78 0%,#c9762f 45%,#8f4a1a 100%);box-shadow:inset 0 -2px 4px rgba(70,30,5,.35);clip-path:inset(100% 0 0 0 round 50%)}
+.steps li b .n{position:relative;z-index:2;transition:color .4s}
+.steps li b .score{position:absolute;inset:0;margin:auto;width:58%;height:58%;z-index:3;overflow:visible}
+.steps li b .score path{fill:none;stroke:#fff8ec;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24}
+.steps li.now b .crumb,.steps li.done b .crumb{opacity:1}
+.steps li.now b .trk{stroke:rgba(201,118,47,.25)}
+.steps li.now b .arc{animation:ovenTimer var(--bake,2s) linear forwards}
+.steps li.now b .crust{animation:crustRise var(--bake,2s) cubic-bezier(.45,0,.75,1) forwards}
+.steps li.now b .n{color:#6b3d16;animation:bakeText var(--bake,2s) linear forwards}
+.steps li.now b{animation:ovenWarm 2.8s ease-in-out infinite;border-radius:50%}
+.steps li.done b .arc{stroke-dashoffset:0;stroke:#8f4a1a}
+.steps li.done b .trk{stroke:transparent}
+.steps li.done b .crust{clip-path:inset(0 0 0 0 round 50%)}
 .steps li.done b .n{opacity:0}
-.steps li.done b::after{z-index:3}
-.burst{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;z-index:4}
-.burst i{position:absolute;left:0;top:0;display:block;border-radius:50%;will-change:transform,opacity}
-.burst .oat{width:11px;height:6px;border-radius:50%;background:#d9a75d;box-shadow:inset 0 -1.5px 0 rgba(110,60,15,.55),0 1px 2px rgba(80,40,10,.3)}
-.burst .flour{width:6px;height:6px;background:#fffdf7;box-shadow:0 0 0 1px rgba(180,130,70,.35),0 0 8px 3px rgba(255,248,230,.95)}
-.burst .crumb{width:6px;height:5px;border-radius:2px;background:#9c561f}
-.burst .seed{width:5px;height:3px;border-radius:50%;background:#3a2414}
-.burst .ring{width:34px;height:34px;margin:-17px 0 0 -17px;border:2.5px solid rgba(224,122,60,.85);box-shadow:0 0 16px rgba(240,170,90,.8)}
-@media (prefers-reduced-motion:reduce){.steps li.now b,.steps li.now b .st{animation:none}.steps li.now b::before{animation:none;opacity:1}}
+.steps li.done b .score path{animation:scoreCut .55s .1s cubic-bezier(.6,0,.2,1) forwards}
+@keyframes ovenTimer{to{stroke-dashoffset:0}}
+@keyframes crustRise{to{clip-path:inset(0 0 0 0 round 50%)}}
+@keyframes bakeText{0%,50%{color:#6b3d16}100%{color:#fff}}
+@keyframes ovenWarm{0%,100%{box-shadow:0 0 0 0 rgba(225,130,50,0)}50%{box-shadow:0 0 16px 2px rgba(225,130,50,.28)}}
+@keyframes scoreCut{to{stroke-dashoffset:0}}
+.steps li b .st{position:absolute;left:50%;bottom:92%;width:4px;height:14px;border-radius:4px;background:linear-gradient(transparent,rgba(255,250,240,.9),transparent);filter:blur(1.5px);opacity:0;pointer-events:none;z-index:4}
+.steps li.now b .st{animation:steamUp 2.6s ease-out infinite}
+.steps li.now b .st+.st{margin-left:-7px;animation-delay:1.3s}
+@keyframes steamUp{0%{transform:translate(-50%,4px) scaleX(1);opacity:0}35%{opacity:.6}100%{transform:translate(-50%,-18px) scaleX(2);opacity:0}}
+.steps li b .glow{position:absolute;inset:-3px;border-radius:50%;pointer-events:none;z-index:0;box-shadow:0 0 0 1px rgba(232,150,70,.6),0 0 22px 6px rgba(240,170,90,.45)}
+@media (prefers-reduced-motion:reduce){.steps li.now b,.steps li.now b .st{animation:none}.steps li.now b .crust{animation:none;clip-path:none}.steps li.now b .arc{animation:none;stroke-dashoffset:0}}
+
 
 .stepcap{display:flex;gap:8px;align-items:center;font-size:.86rem;font-weight:600}
 .stepcap b{background:var(--orange);color:#fff;border-radius:999px;padding:2px 9px;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;flex:none}
@@ -658,14 +664,9 @@ if(window.gsap&&window.ScrollTrigger){
   /* step tracker: the current step drops open with a short line, finished steps fold shut with a tick */
   const SEG=[0,1.4,3.8,5.1],LBL=steps.map(l=>l.querySelector(".lbl3").textContent.trim()),cap=$("stepcap");
   let lastK=-1,trackOn=true;
-  steps.forEach((l,i)=>{const b=l.querySelector("b");b.innerHTML=`<span class="n">${i+1}</span><i class="st"></i><i class="st"></i><i class="st"></i>`});
-  const burst=b=>{if(reduce)return;const c=document.createElement("span");c.className="burst";b.appendChild(c);
-    const ring=document.createElement("i");ring.className="ring";c.appendChild(ring);ring.animate([{transform:"scale(.6)",opacity:1},{transform:"scale(2.4)",opacity:0}],{duration:650,easing:"cubic-bezier(.2,.7,.3,1)"});
-    const kinds=["oat","oat","flour","crumb","seed","oat","flour"];
-    for(let n=0;n<22;n++){const e=document.createElement("i");e.className=kinds[n%kinds.length];c.appendChild(e);
-      const a=(n/22)*Math.PI*2+Math.random()*.4,d=34+Math.random()*38,dx=Math.cos(a)*d,dy=Math.sin(a)*d-8,r=Math.random()*540-270;
-      e.animate([{transform:"translate(-50%,-50%) scale(.4) rotate(0deg)",opacity:1},{transform:`translate(calc(-50% + ${dx*.7}px),calc(-50% + ${dy*.7}px)) scale(1.1) rotate(${r*.6}deg)`,opacity:1,offset:.55},{transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy+14}px)) scale(.8) rotate(${r}deg)`,opacity:0}],{duration:850+Math.random()*350,easing:"cubic-bezier(.15,.7,.3,1)",fill:"forwards"})}
-    setTimeout(()=>c.remove(),1400)};
+  steps.forEach((l,i)=>{const b=l.querySelector("b");b.innerHTML=`<svg class="dial" viewBox="0 0 40 40" aria-hidden="true"><circle class="trk" cx="20" cy="20" r="18"/><circle class="arc" cx="20" cy="20" r="18"/></svg><span class="crumb"></span><span class="crust"></span><span class="n">${i+1}</span><svg class="score" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.8c2 1.6 3.4 3 4.6 4.6C12 12.6 15 8.6 19.5 5.5"/></svg><i class="st"></i><i class="st"></i>`});
+  const burst=b=>{if(reduce)return;const g=document.createElement("span");g.className="glow";b.appendChild(g);
+    g.animate([{opacity:0,transform:"scale(.9)"},{opacity:1,transform:"scale(1.05)",offset:.3},{opacity:0,transform:"scale(1.6)"}],{duration:900,easing:"cubic-bezier(.2,.7,.3,1)",fill:"forwards"});setTimeout(()=>g.remove(),950)};
   const track=()=>{if(trackOn){const d=bv.duration||12.54,t=bv.currentTime||0;let k=0;while(k<3&&t>=SEG[k+1])k++;
       if(k!==lastK){const prev=lastK;lastK=k;
         if(prev>=0&&(k===prev+1||(prev===3&&k===0)))burst(steps[prev].querySelector("b"));
